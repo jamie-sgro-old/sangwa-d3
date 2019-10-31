@@ -121,13 +121,11 @@ class Histogram extends D3Skeleton {
     var bar = this.canvas.selectAll("rect.bar")
       .data(bins)
       .enter()
-      .append("g")
+      .append("rect")
         .attr("class", "bar")
-        .attr("transform", function(d) {
-          return "translate(" + 1 + "," + 0 + ")";
-        })
-        .append("rect")
-          .call(this.getAttr, this, ["x", "y", "width", "height"])
+        .call(this.getAttr, this, ["x", "y", "width", "height"])
+        .attr("transform", "translate(" + 1 + "," + 0 + ")")
+        .attr("fill", "steelblue")
 
     bar.append("text")
       .attr("dy", ".75em")
