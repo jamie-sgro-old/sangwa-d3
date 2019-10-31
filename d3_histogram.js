@@ -144,8 +144,6 @@ class Histogram extends D3Skeleton {
       .thresholds(widthScale.ticks(10))
       (map);
 
-    var heightScale = this.getHeightScale(data);
-
     this.canvas.selectAll("rect.bar")
       .data(data)
       .enter()
