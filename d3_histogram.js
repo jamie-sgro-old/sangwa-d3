@@ -39,8 +39,10 @@ class D3Skeleton {
 
 class Histogram extends D3Skeleton {
   /** @constructor */
-  constructor(width, height, margin, colour) {
+  constructor(width, height, margin, colour, type) {
     super(width, height, margin, colour);
+
+    this.type = type;
   }
 
   getHeightScale(data) {
@@ -150,10 +152,18 @@ class Histogram extends D3Skeleton {
 
 
 
+  getMap(rawData) {
+    if (this.type == "int") {
+      return rawData.map(function(d, i) {
+        return parseFloat(d.value);
+      });
+    };
+  };
+
+
+
   plot(rawData) {
-    var map = rawData.map(function(d, i) {
-      return parseFloat(d.value);
-    })
+    var map = this.getMap(rawData);
 
     data = this.getBins(map);
 
@@ -196,7 +206,8 @@ h = new Histogram(
   960,
   500,
   {top: 10, right: 30, bottom: 30, left: 30},
-  {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"}
+  {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+  type = "int"
 );
 
 data = [{"value":"5"},{"value":"1"},{"value":"35"},{"value":"55"},{"value":"6"},{"value":"3"},{"value":"34"},{"value":"76"},{"value":"23"},{"value":"64"},{"value":"23"},{"value":"1"},{"value":"3"},{"value":"6"},{"value":"14"},{"value":"13"},{"value":"11"},{"value":"25"},{"value":"35"},{"value":"45"},{"value":"55"},{"value":"25"},{"value":"34"},{"value":"54"},{"value":"53"},{"value":"52"},{"value":"51"},{"value":"45"},{"value":"47"},{"value":"36"},{"value":"39"},{"value":"8"},{"value":"19"},{"value":"56"},{"value":"87"},{"value":"76"},{"value":"74"},{"value":"73"},{"value":"26"},{"value":"45"}]
