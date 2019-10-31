@@ -57,6 +57,23 @@ class Histogram extends D3Skeleton {
       .rangeRound([0, this.width]);
   };
 
+
+
+  /**
+  * getXAxis - create an x axis on left within the g element
+  *
+  * @param   {obj} path - reference to the d3 object calling the function
+  * @param   {obj} obj - the class element typically evoked though 'this.'
+  * @param   {obj} data - reference to the data from d3 object calling the function
+  */
+  getXAxis(path, obj, data) {
+    path
+      .attr("transform", "translate(0," + obj.height + ")")
+      .call(d3.axisBottom(obj.getWidthScale(data)));
+  }
+
+
+
   /**
   * Constructor for reused attributes for d3 elements. All updates to common
   * atrributes are stored in this single function for rapid updating
@@ -134,8 +151,7 @@ class Histogram extends D3Skeleton {
     this.canvas
       .append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + this.height + ")")
-        .call(d3.axisBottom(widthScale));
+        .call(this.getXAxis, this, bins);
   };
 };
 
