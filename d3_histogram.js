@@ -59,6 +59,17 @@ class Histogram extends D3Skeleton {
 
 
 
+  getBins(data) {
+    var widthScale = this.getWidthScale(data);
+
+    return d3.histogram()
+      .domain(widthScale.domain())
+      .thresholds(widthScale.ticks(10))
+      (data);
+  };
+
+
+
   /**
   * getXAxis - create an x axis on left within the g element
   *
@@ -139,10 +150,7 @@ class Histogram extends D3Skeleton {
 
     var widthScale = this.getWidthScale(map);
 
-    var data = d3.histogram()
-      .domain(widthScale.domain())
-      .thresholds(widthScale.ticks(10))
-      (map);
+    data = this.getBins(map);
 
     this.canvas.selectAll("rect.bar")
       .data(data)
@@ -159,7 +167,9 @@ class Histogram extends D3Skeleton {
         .attr("y", 6)
         .attr("x", (widthScale(data[0].x1) - widthScale(data[0].x0)) / 2)
         .attr("text-anchor", "middle")
-        .text(function(d) { return formatCount(d.length); });
+        .text(function(d) {
+          return formatCount(d.length);
+        });
 
     this.canvas
       .append("g")
