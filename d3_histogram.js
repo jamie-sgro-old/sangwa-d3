@@ -108,14 +108,16 @@ class Histogram extends D3Skeleton {
 
     var heightScale = this.getHeightScale(bins);
 
-    var bar = this.canvas.selectAll(".bar")
+    var bar = this.canvas.selectAll("rect.bar")
       .data(bins)
       .enter()
       .append("g")
         .attr("class", "bar")
         .attr("transform", function(d) { return "translate(" + widthScale(d.x0) + "," + heightScale(d.length) + ")"; })
         .append("rect")
-          .attr("x", 1)
+          .attr("x", function(d) {
+            return 1;
+          })
           .call(this.getAttr, this, ["width", "height"])
 
     bar.append("text")
