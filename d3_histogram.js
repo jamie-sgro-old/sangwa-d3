@@ -33,15 +33,19 @@ class D3Skeleton {
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
   };
-};
+}; // End Class
 
 
 
 class Histogram extends D3Skeleton {
   /** @constructor */
-  constructor(width, height, margin, colour) {
+  constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour);
+
+    this.binNum = binNum
   }
+
+
 
   getHeightScale(data) {
     return d3.scaleLinear()
@@ -51,20 +55,19 @@ class Histogram extends D3Skeleton {
       .range([this.height, 0]);
   };
 
-  getWidthScale(map) {
-    return d3.scaleLinear()
-      .domain([0, d3.max(map)])
-      .rangeRound([0, this.width]);
-  };
+
+
+  getWidthScale(map) {};
 
 
 
   getBins(data) {
     var widthScale = this.getWidthScale(data);
+    var binNum = this.binNum
 
     return d3.histogram()
       .domain(widthScale.domain())
-      .thresholds(widthScale.ticks(10))
+      .thresholds(widthScale.ticks(binNum))
       (data);
   };
 
@@ -150,12 +153,15 @@ class Histogram extends D3Skeleton {
 
 
 
-  plot(rawData) {
-    var map = rawData.map(function(d, i) {
-      return parseFloat(d.value);
-    })
+  getMap(rawData) {};
 
-    data = this.getBins(map);
+
+
+  plot(rawData) {
+    var map = this.getMap(rawData);
+
+    var data = this.getBins(map);
+    console.log(data);
 
     this.canvas.selectAll("rect.bar")
       .data(data)
@@ -188,21 +194,75 @@ class Histogram extends D3Skeleton {
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
   };
-};
+}; // End Class
 
 
 
-h = new Histogram(
+class Histogram_Int extends Histogram {
+  /** @constructor */
+  constructor(width, height, margin, colour, binNum) {
+    super(width, height, margin, colour, binNum);
+  }
+
+
+
+  getWidthScale(map) {
+    return d3.scaleLinear()
+      .domain([0, d3.max(map)])
+      .rangeRound([0, this.width]);
+  };
+
+
+
+  getMap(rawData) {
+    return rawData.map(function(d, i) {
+      return parseFloat(d.value);
+    });
+  };
+}; // End Class
+
+
+
+class Histogram_Date extends Histogram {
+  /** @constructor */
+  constructor(width, height, margin, colour, binNum) {
+    super(width, height, margin, colour, binNum);
+  }
+
+
+
+  getWidthScale(map) {
+    return d3.scaleTime()
+      .domain(d3.extent(map, function(d) {
+        return new Date(d);
+      }))
+      .rangeRound([0, this.width]);
+  };
+
+
+
+  getMap(rawData) {
+    var parseTime = d3.timeParse("%Y-%m-%d");
+    return rawData.map(function(d, i) {
+      return parseTime(d.value);
+    });
+  };
+}; // End Class
+
+
+
+h = new Histogram_Int(
   960,
   500,
   {top: 10, right: 30, bottom: 30, left: 30},
-  {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"}
+  {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+  binNum = 10
 );
 
-data = [{"value":"5"},{"value":"1"},{"value":"35"},{"value":"55"},{"value":"6"},{"value":"3"},{"value":"34"},{"value":"76"},{"value":"23"},{"value":"64"},{"value":"23"},{"value":"1"},{"value":"3"},{"value":"6"},{"value":"14"},{"value":"13"},{"value":"11"},{"value":"25"},{"value":"35"},{"value":"45"},{"value":"55"},{"value":"25"},{"value":"34"},{"value":"54"},{"value":"53"},{"value":"52"},{"value":"51"},{"value":"45"},{"value":"47"},{"value":"36"},{"value":"39"},{"value":"8"},{"value":"19"},{"value":"56"},{"value":"87"},{"value":"76"},{"value":"74"},{"value":"73"},{"value":"26"},{"value":"45"}]
+dataInt = [{"value":"5"},{"value":"1"},{"value":"35"},{"value":"55"},{"value":"6"},{"value":"3"},{"value":"34"},{"value":"76"},{"value":"23"},{"value":"64"},{"value":"23"},{"value":"1"},{"value":"3"},{"value":"6"},{"value":"14"},{"value":"13"},{"value":"11"},{"value":"25"},{"value":"35"},{"value":"45"},{"value":"55"},{"value":"25"},{"value":"34"},{"value":"54"},{"value":"53"},{"value":"52"},{"value":"51"},{"value":"45"},{"value":"47"},{"value":"36"},{"value":"39"},{"value":"8"},{"value":"19"},{"value":"56"},{"value":"87"},{"value":"76"},{"value":"74"},{"value":"73"},{"value":"26"},{"value":"45"}]
 
-/*
-data = [
+
+dataDate = [
   {value: "2004-04-15", null: 2},
   {value: "2004-11-01", null: 2},
   {value: "2005-01-21", null: 2},
@@ -214,12 +274,18 @@ data = [
   {value: "2005-07-12", null: 10},
   {value: "2005-07-14", null: 8},
 ]
-*/
-
-h.plot(data)
 
 
+h.plot(dataInt);
 
 
+h = new Histogram_Date(
+  960,
+  500,
+  {top: 10, right: 30, bottom: 30, left: 30},
+  {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+  binNum = 10
+);
 
+h.plot(dataDate);
 //
