@@ -69,10 +69,17 @@ class Histogram extends D3Skeleton {
   getAttr(path, obj, attributes) {
     var key;
 
+    //flatten data with d3.merge
+    var widthScale = obj.getWidthScale(path.data());
     var heightScale = obj.getHeightScale(path.data());
 
     for (key in attributes) {
       switch (attributes[key]) {
+        case "width":
+          path.attr("width", function(d) {
+            return widthScale(path.data()[0].x1) - widthScale(path.data()[0].x0) - 1;
+          });
+          break;
         case "height":
           path.attr("height", function(d) {
             return obj.height - heightScale(d.length);
@@ -109,8 +116,7 @@ class Histogram extends D3Skeleton {
         .attr("transform", function(d) { return "translate(" + widthScale(d.x0) + "," + heightScale(d.length) + ")"; })
         .append("rect")
           .attr("x", 1)
-          .attr("width", widthScale(bins[0].x1) - widthScale(bins[0].x0) - 1)
-          .call(this.getAttr, this, ["height"])
+          .call(this.getAttr, this, ["width", "height"])
 
     bar.append("text")
       .attr("dy", ".75em")
