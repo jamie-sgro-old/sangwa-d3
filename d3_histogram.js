@@ -53,17 +53,17 @@ class Histogram extends D3Skeleton {
 
     var formatCount = d3.format(",.0f");
 
-    var getWidth = d3.scaleLinear()
+    var widthScale = d3.scaleLinear()
         .rangeRound([0, width])
         .domain([0,d3.max(map)]);
 
     var bins = d3.histogram()
-        .domain(getWidth.domain())
-        .thresholds(getWidth.ticks(10))
+        .domain(widthScale.domain())
+        .thresholds(widthScale.ticks(10))
         (map);
 
 
-    var getHeight = d3.scaleLinear()
+    var heightScale = d3.scaleLinear()
         .domain([0, d3.max(bins, function(d) { return d.length; })])
         .range([height, 0]);
 
@@ -72,23 +72,23 @@ class Histogram extends D3Skeleton {
       .enter()
       .append("g")
         .attr("class", "bar")
-        .attr("transform", function(d) { return "translate(" + getWidth(d.x0) + "," + getHeight(d.length) + ")"; })
+        .attr("transform", function(d) { return "translate(" + widthScale(d.x0) + "," + heightScale(d.length) + ")"; })
         .append("rect")
           .attr("x", 1)
-          .attr("width", getWidth(bins[0].x1) - getWidth(bins[0].x0) - 1)
-          .attr("height", function(d) { return height - getHeight(d.length); });
+          .attr("width", widthScale(bins[0].x1) - widthScale(bins[0].x0) - 1)
+          .attr("height", function(d) { return height - heightScale(d.length); });
 
     bar.append("text")
         .attr("dy", ".75em")
         .attr("y", 6)
-        .attr("x", (getWidth(bins[0].x1) - getWidth(bins[0].x0)) / 2)
+        .attr("x", (widthScale(bins[0].x1) - widthScale(bins[0].x0)) / 2)
         .attr("text-anchor", "middle")
         .text(function(d) { return formatCount(d.length); });
 
     this.canvas.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(getWidth));
+        .call(d3.axisBottom(widthScale));
   };
 };
 
