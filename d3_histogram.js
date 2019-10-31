@@ -75,6 +75,20 @@ class Histogram extends D3Skeleton {
 
 
   /**
+  * getYAxis - create a y axis on the top of svg within the g element
+  *
+  * @param   {obj} path - reference to the d3 object calling the function
+  * @param   {obj} obj - the class element typically evoked though 'this.'
+  * @param   {obj} data - reference to the data from d3 object calling the function
+  */
+  getYAxis(path, obj, data) {
+    path
+      .call(d3.axisLeft(obj.getHeightScale(data)));
+  }
+
+
+
+  /**
   * Constructor for reused attributes for d3 elements. All updates to common
   * atrributes are stored in this single function for rapid updating
   *
@@ -132,7 +146,7 @@ class Histogram extends D3Skeleton {
 
     var heightScale = this.getHeightScale(bins);
 
-    var bar = this.canvas.selectAll("rect.bar")
+    this.canvas.selectAll("rect.bar")
       .data(bins)
       .enter()
       .append("rect")
@@ -141,17 +155,24 @@ class Histogram extends D3Skeleton {
         .attr("transform", "translate(" + 1 + "," + 0 + ")")
         .attr("fill", "steelblue")
 
-    bar.append("text")
-      .attr("dy", ".75em")
-      .attr("y", 6)
-      .attr("x", (widthScale(bins[0].x1) - widthScale(bins[0].x0)) / 2)
-      .attr("text-anchor", "middle")
-      .text(function(d) { return formatCount(d.length); });
+    this.canvas.selectAll("rect.bar")
+      .append("text")
+        .attr("dy", ".75em")
+        .attr("y", 6)
+        .attr("x", (widthScale(bins[0].x1) - widthScale(bins[0].x0)) / 2)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return formatCount(d.length); });
 
     this.canvas
       .append("g")
         .attr("class", "x axis")
         .call(this.getXAxis, this, bins);
+
+    // add the y Axis
+    this.canvas
+      .append("g")
+        .attr("class", "y axis")
+        .call(this.getYAxis, this, bins);
   };
 };
 
