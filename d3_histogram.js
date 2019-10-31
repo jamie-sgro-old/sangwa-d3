@@ -142,11 +142,9 @@ class Histogram extends D3Skeleton {
   };
 
   plot(rawData) {
-    var map = rawData.map(function(d,i) {
+    var map = rawData.map(function(d, i) {
       return parseFloat(d.value);
     })
-
-    var formatCount = d3.format(",.0f");
 
     var widthScale = this.getWidthScale(map);
 
@@ -168,6 +166,7 @@ class Histogram extends D3Skeleton {
         .attr("x", (widthScale(data[0].x1) - widthScale(data[0].x0)) / 2)
         .attr("text-anchor", "middle")
         .text(function(d) {
+          var formatCount = d3.format(",.0f");
           return formatCount(d.length);
         });
 
