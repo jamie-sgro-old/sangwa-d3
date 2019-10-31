@@ -43,6 +43,14 @@ class Histogram extends D3Skeleton {
     super(width, height, margin, colour);
   }
 
+  getHeightScale(bins) {
+    return d3.scaleLinear()
+      .domain([0, d3.max(bins, function(d) {
+        return d.length;
+      })])
+      .range([this.height, 0]);
+  }
+
   getWidthScale(map) {
     return d3.scaleLinear()
       .domain([0, d3.max(map)])
@@ -66,12 +74,7 @@ class Histogram extends D3Skeleton {
       .thresholds(widthScale.ticks(10))
       (map);
 
-
-    var heightScale = d3.scaleLinear()
-      .range([height, 0]);
-      .domain([0, d3.max(bins, function(d) {
-        return d.length;
-      })])
+    var heightScale = this.getHeightScale(bins);
 
     var bar = this.canvas.selectAll(".bar")
       .data(bins)
