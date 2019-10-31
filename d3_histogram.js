@@ -129,7 +129,8 @@ class Histogram extends D3Skeleton {
           break;
         case "width":
           path.attr("width", function(d) {
-            return widthScale(path.data()[0].x1) - widthScale(path.data()[0].x0) - 1;
+            var db = path.data()
+            return widthScale(db[0].x1) - widthScale(db[0].x0) - 1;
           });
           break;
         case "height":
@@ -137,16 +138,22 @@ class Histogram extends D3Skeleton {
             return obj.height - heightScale(d.length);
           })
           break;
+        case "xText":
+          path.attr("x", function(d) {
+            var db = path.data()
+            return (widthScale(db[0].x1) - widthScale(db[0].x0)) / 2;
+          });
+          break;
       };
     };
   };
+
+
 
   plot(rawData) {
     var map = rawData.map(function(d, i) {
       return parseFloat(d.value);
     })
-
-    var widthScale = this.getWidthScale(map);
 
     data = this.getBins(map);
 
@@ -163,7 +170,7 @@ class Histogram extends D3Skeleton {
       .append("text")
         .attr("dy", ".75em")
         .attr("y", 6)
-        .attr("x", (widthScale(data[0].x1) - widthScale(data[0].x0)) / 2)
+        .call(this.getAttr, this, ["xText"])
         .attr("text-anchor", "middle")
         .text(function(d) {
           var formatCount = d3.format(",.0f");
