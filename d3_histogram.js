@@ -43,6 +43,7 @@ class Histogram extends D3Skeleton {
     super(width, height, margin, colour);
 
     this.binNum = binNum
+    this.yLabel = "value"
   }
 
 
@@ -215,8 +216,9 @@ class Histogram_Int extends Histogram {
 
 
   getMap(rawData) {
+    var yLabel = this.yLabel
     return rawData.map(function(d, i) {
-      return parseFloat(d.value);
+      return parseFloat(d[yLabel]);
     });
   };
 }; // End Class
@@ -242,9 +244,10 @@ class Histogram_Date extends Histogram {
 
 
   getMap(rawData) {
+    var yLabel = this.yLabel
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
-      return parseTime(d.value);
+      return parseTime(d[yLabel]);
     });
   };
 }; // End Class
