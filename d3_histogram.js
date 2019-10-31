@@ -51,7 +51,7 @@ class Histogram extends D3Skeleton {
 
   plot(data) {
     var width = this.width,
-        height = this.height
+      height = this.height
 
     var map = data.map(function(d,i) {
       return parseFloat(d.age);
@@ -62,14 +62,16 @@ class Histogram extends D3Skeleton {
     var widthScale = this.getWidthScale(map);
 
     var bins = d3.histogram()
-        .domain(widthScale.domain())
-        .thresholds(widthScale.ticks(10))
-        (map);
+      .domain(widthScale.domain())
+      .thresholds(widthScale.ticks(10))
+      (map);
 
 
     var heightScale = d3.scaleLinear()
-        .domain([0, d3.max(bins, function(d) { return d.length; })])
-        .range([height, 0]);
+      .range([height, 0]);
+      .domain([0, d3.max(bins, function(d) {
+        return d.length;
+      })])
 
     var bar = this.canvas.selectAll(".bar")
       .data(bins)
@@ -83,16 +85,16 @@ class Histogram extends D3Skeleton {
           .attr("height", function(d) { return height - heightScale(d.length); });
 
     bar.append("text")
-        .attr("dy", ".75em")
-        .attr("y", 6)
-        .attr("x", (widthScale(bins[0].x1) - widthScale(bins[0].x0)) / 2)
-        .attr("text-anchor", "middle")
-        .text(function(d) { return formatCount(d.length); });
+      .attr("dy", ".75em")
+      .attr("y", 6)
+      .attr("x", (widthScale(bins[0].x1) - widthScale(bins[0].x0)) / 2)
+      .attr("text-anchor", "middle")
+      .text(function(d) { return formatCount(d.length); });
 
     this.canvas.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(widthScale));
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(widthScale));
   };
 };
 
