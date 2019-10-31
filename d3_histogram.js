@@ -59,11 +59,7 @@ class Histogram extends D3Skeleton {
 
     var formatCount = d3.format(",.0f");
 
-    widthScale = this.getWidthScale(map);
-
-    var widthScale = d3.scaleLinear()
-        .rangeRound([0, width])
-        .domain([0,d3.max(map)]);
+    var widthScale = this.getWidthScale(map);
 
     var bins = d3.histogram()
         .domain(widthScale.domain())
