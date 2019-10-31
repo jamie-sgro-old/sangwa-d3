@@ -80,6 +80,11 @@ class Histogram extends D3Skeleton {
             return widthScale(d.x0);
           });
           break;
+        case "y":
+          path.attr("y", function(d) {
+            return 0;
+          });
+          break;
         case "width":
           path.attr("width", function(d) {
             return widthScale(path.data()[0].x1) - widthScale(path.data()[0].x0) - 1;
@@ -122,7 +127,7 @@ class Histogram extends D3Skeleton {
           return "translate(" + 1 + "," + heightScale(d.length) + ")";
         })
         .append("rect")
-          .call(this.getAttr, this, ["x", "width", "height"])
+          .call(this.getAttr, this, ["x", "y", "width", "height"])
 
     bar.append("text")
       .attr("dy", ".75em")
