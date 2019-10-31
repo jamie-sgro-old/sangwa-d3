@@ -62,7 +62,7 @@ class Histogram extends D3Skeleton {
       height = this.height
 
     var map = data.map(function(d,i) {
-      return parseFloat(d.age);
+      return parseFloat(d.value);
     })
 
     var formatCount = d3.format(",.0f");
@@ -110,7 +110,7 @@ h = new Histogram(
   {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"}
 );
 
-data = [{"name":"Mark","age":"5"},{"name":"Mark","age":"1"},{"name":"Mark","age":"35"},{"name":"Mark","age":"55"},{"name":"Mark","age":"6"},{"name":"Mark","age":"3"},{"name":"Mark","age":"34"},{"name":"Mark","age":"76"},{"name":"Mark","age":"23"},{"name":"Mark","age":"64"},{"name":"Mark","age":"23"},{"name":"Mark","age":"1"},{"name":"Mark","age":"3"},{"name":"Mark","age":"6"},{"name":"Mark","age":"14"},{"name":"Mark","age":"13"},{"name":"Mark","age":"11"},{"name":"Mark","age":"25"},{"name":"Mark","age":"35"},{"name":"Mark","age":"45"},{"name":"Mark","age":"55"},{"name":"Mark","age":"25"},{"name":"Mark","age":"34"},{"name":"Mark","age":"54"},{"name":"Mark","age":"53"},{"name":"Mark","age":"52"},{"name":"Mark","age":"51"},{"name":"Mark","age":"45"},{"name":"Mark","age":"47"},{"name":"Mark","age":"36"},{"name":"Mark","age":"39"},{"name":"Mark","age":"8"},{"name":"Mark","age":"19"},{"name":"Mark","age":"56"},{"name":"Mark","age":"87"},{"name":"Mark","age":"76"},{"name":"Mark","age":"74"},{"name":"Mark","age":"73"},{"name":"Mark","age":"26"},{"name":"Mark","age":"45"}]
+data = [{"name":"Mark","value":"5"},{"name":"Mark","value":"1"},{"name":"Mark","value":"35"},{"name":"Mark","value":"55"},{"name":"Mark","value":"6"},{"name":"Mark","value":"3"},{"name":"Mark","value":"34"},{"name":"Mark","value":"76"},{"name":"Mark","value":"23"},{"name":"Mark","value":"64"},{"name":"Mark","value":"23"},{"name":"Mark","value":"1"},{"name":"Mark","value":"3"},{"name":"Mark","value":"6"},{"name":"Mark","value":"14"},{"name":"Mark","value":"13"},{"name":"Mark","value":"11"},{"name":"Mark","value":"25"},{"name":"Mark","value":"35"},{"name":"Mark","value":"45"},{"name":"Mark","value":"55"},{"name":"Mark","value":"25"},{"name":"Mark","value":"34"},{"name":"Mark","value":"54"},{"name":"Mark","value":"53"},{"name":"Mark","value":"52"},{"name":"Mark","value":"51"},{"name":"Mark","value":"45"},{"name":"Mark","value":"47"},{"name":"Mark","value":"36"},{"name":"Mark","value":"39"},{"name":"Mark","value":"8"},{"name":"Mark","value":"19"},{"name":"Mark","value":"56"},{"name":"Mark","value":"87"},{"name":"Mark","value":"76"},{"name":"Mark","value":"74"},{"name":"Mark","value":"73"},{"name":"Mark","value":"26"},{"name":"Mark","value":"45"}]
 
 h.plot(data)
 
