@@ -100,9 +100,6 @@ class Histogram extends D3Skeleton {
   };
 
   plot(data) {
-    var width = this.width,
-      height = this.height
-
     var map = data.map(function(d,i) {
       return parseFloat(d.value);
     })
@@ -136,7 +133,7 @@ class Histogram extends D3Skeleton {
 
     this.canvas.append("g")
       .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + this.height + ")")
       .call(d3.axisBottom(widthScale));
   };
 };
