@@ -49,13 +49,38 @@ class Histogram extends D3Skeleton {
         return d.length;
       })])
       .range([this.height, 0]);
-  }
+  };
 
   getWidthScale(map) {
     return d3.scaleLinear()
       .domain([0, d3.max(map)])
-      .rangeRound([0, this.width])
-  }
+      .rangeRound([0, this.width]);
+  };
+
+  /**
+  * Constructor for reused attributes for d3 elements. All updates to common
+  * atrributes are stored in this single function for rapid updating
+  *
+  * @param {obj} path - reference to the d3 object calling the function
+  * @param {obj} obj - the class element typically evoked though 'this.'
+  * @param {array} attributes - array of strings that match d3 attributes
+  *
+  */
+  getAttr(path, obj, attributes) {
+    var key;
+
+    var heightScale = obj.getHeightScale(path.data());
+
+    for (key in attributes) {
+      switch (attributes[key]) {
+        case "height":
+          path.attr("height", function(d) {
+            return obj.height - heightScale(d.length);
+          })
+          break;
+      };
+    };
+  };
 
   plot(data) {
     var width = this.width,
@@ -85,7 +110,7 @@ class Histogram extends D3Skeleton {
         .append("rect")
           .attr("x", 1)
           .attr("width", widthScale(bins[0].x1) - widthScale(bins[0].x0) - 1)
-          .attr("height", function(d) { return height - heightScale(d.length); });
+          .call(this.getAttr, this, ["height"])
 
     bar.append("text")
       .attr("dy", ".75em")
