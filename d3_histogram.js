@@ -131,10 +131,11 @@ class Histogram extends D3Skeleton {
       .attr("text-anchor", "middle")
       .text(function(d) { return formatCount(d.length); });
 
-    this.canvas.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + this.height + ")")
-      .call(d3.axisBottom(widthScale));
+    this.canvas
+      .append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + this.height + ")")
+        .call(d3.axisBottom(widthScale));
   };
 };
 
