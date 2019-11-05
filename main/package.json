@@ -21,6 +21,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "d3": "^5.12.0",
-    "jsdoc": "^3.6.3"
+    "jsdoc": "^3.6.3",
+    "node": "^12.13.0",
+    "require": "^2.4.20"
   }
 }
