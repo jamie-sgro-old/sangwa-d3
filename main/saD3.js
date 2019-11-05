@@ -1,4 +1,19 @@
-class D3Skeleton {
+/**
+ *  @fileOverview saD3 is a javascript library extending the d3
+ * functionality of common graphs matching the conventions perscribed
+ * by Sangwa Solutions
+ *
+ *  @author       Jamie Sgro
+ *
+ *  @requires     {@link https://d3js.org/d3.v5.min.js d3.v5}
+ */
+
+
+/**
+ * Base class of all d3 all super classes
+ */
+
+class Base_D3 {
   /** @constructor */
   constructor(width, height, margin, colour) {
     this.margin = margin;
@@ -37,7 +52,10 @@ class D3Skeleton {
 
 
 
-class Histogram extends D3Skeleton {
+/**
+ *
+ */
+class Histogram extends Base_D3 {
   /** @constructor */
   constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour);
