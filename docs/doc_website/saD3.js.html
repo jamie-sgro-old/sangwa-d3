@@ -26,7 +26,22 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>class D3Skeleton {
+            <pre class="prettyprint source linenums"><code>/**
+ *  @fileOverview saD3 is a javascript library extending the d3
+ * functionality of common graphs matching the conventions perscribed
+ * by Sangwa Solutions
+ *
+ *  @author       Jamie Sgro
+ *
+ *  @requires     {@link https://d3js.org/d3.v5.min.js d3.v5}
+ */
+
+
+/**
+ * Base class of all d3 all super classes
+ */
+
+class Base_D3 {
   /** @constructor */
   constructor(width, height, margin, colour) {
     this.margin = margin;
@@ -65,7 +80,10 @@
 
 
 
-class Histogram extends D3Skeleton {
+/**
+ * Create a histogram defined by the use of a bin to aggregate similar data
+ */
+class Histogram extends Base_D3 {
   /** @constructor */
   constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour);
@@ -75,7 +93,15 @@ class Histogram extends D3Skeleton {
   }
 
 
-
+  /**
+  * Map integers of any range to a particular pixel point on an svg element
+  *
+  * path.data() indicates all the data in an array of JSON objects
+  * d in the function indicates a single datapoint in path.data()
+  *
+  * @param {obj} data - reference to the data from d3 object calling the function
+  *
+  */
   getHeightScale(data) {
     return d3.scaleLinear()
       .domain([0, d3.max(data, function(d) {
@@ -85,11 +111,21 @@ class Histogram extends D3Skeleton {
   };
 
 
-
+  /** Polymorphism */
   getWidthScale(map) {};
 
 
 
+
+  /**
+   * getBins - convert data into a 'binned' version of itself based on the
+   * predefined number of bins intended.
+   * i.e. a bin of two would aggregate a bottom and top half of the univariate
+   * data
+   *
+   * @param  {array} data the raw data used to be aggregated into 'bins'
+   * @return {obj}      returns d3.histogram datastructure
+   */
   getBins(data) {
     var widthScale = this.getWidthScale(data);
     var binNum = this.binNum
@@ -181,11 +217,16 @@ class Histogram extends D3Skeleton {
   };
 
 
-
+  /** Polymorphism */
   getMap(rawData) {};
 
 
 
+  /**
+   * plot - Instantiate the visualization based on the data provided
+   *
+   * @param  {array} rawData an array of json objects with a common key
+   */
   plot(rawData) {
     var map = this.getMap(rawData);
 
@@ -227,6 +268,13 @@ class Histogram extends D3Skeleton {
 
 
 
+
+/**
+ * Extention of Histogram for data that is of type: Int
+ * @class
+ *
+ *
+ */
 class Histogram_Int extends Histogram {
   /** @constructor */
   constructor(width, height, margin, colour, binNum) {
@@ -234,15 +282,29 @@ class Histogram_Int extends Histogram {
   }
 
 
-
-  getWidthScale(map) {
+  /**
+  * Map Integers of any range to a particular pixel point on an svg element
+  *
+  * path.data() indicates all the data in an array of JSON objects
+  * d in the function indicates a single datapoint in path.data()
+  *
+  * @param {obj} data - reference to the data from d3 object calling the function
+  *
+  */
+  getWidthScale(data) {
     return d3.scaleLinear()
-      .domain([0, d3.max(map)])
+      .domain([0, d3.max(data)])
       .rangeRound([0, this.width]);
   };
 
 
-
+  /**
+   * getMap - pre clean raw data in the form of an integer to float messy integers
+   *
+   * @param  {array} rawData an array of json objects
+   * @return {array}         an array of parsed json objects according to
+   *  parseFloat()
+   */
   getMap(rawData) {
     var yLabel = this.yLabel
     return rawData.map(function(d, i) {
@@ -253,6 +315,13 @@ class Histogram_Int extends Histogram {
 
 
 
+/**
+ * Extention of Histogram for data that is of type: string
+ * @class
+ *
+ * Currently, date strings are expected to match the d3.timeParse "%Y-%m-%d"
+ * i.e. "2004-04-15"
+ */
 class Histogram_Date extends Histogram {
   /** @constructor */
   constructor(width, height, margin, colour, binNum) {
@@ -260,10 +329,18 @@ class Histogram_Date extends Histogram {
   }
 
 
-
-  getWidthScale(map) {
+  /**
+  * Map dates of any range to a particular pixel point on an svg element
+  *
+  * path.data() indicates all the data in an array of JSON objects
+  * d in the function indicates a single datapoint in path.data()
+  *
+  * @param {obj} data - reference to the data from d3 object calling the function
+  *
+  */
+  getWidthScale(data) {
     return d3.scaleTime()
-      .domain(d3.extent(map, function(d) {
+      .domain(d3.extent(data, function(d) {
         return new Date(d);
       }))
       .rangeRound([0, this.width]);
@@ -271,6 +348,14 @@ class Histogram_Date extends Histogram {
 
 
 
+  /**
+   * getMap - pre clean raw data in the form of a string that matches the date
+   * string provided
+   *
+   * @param  {array} rawData an array of json objects
+   * @return {array}         an array of parsed json objects according to
+   *  d3.timeParse
+   */
   getMap(rawData) {
     var yLabel = this.yLabel
     var parseTime = d3.timeParse("%Y-%m-%d");
@@ -300,13 +385,13 @@ class Histogram_Date extends Histogram {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="D3Skeleton.html">D3Skeleton</a></li><li><a href="Histogram.html">Histogram</a></li><li><a href="Histogram_Date.html">Histogram_Date</a></li><li><a href="Histogram_Int.html">Histogram_Int</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base_D3.html">Base_D3</a></li><li><a href="Histogram.html">Histogram</a></li><li><a href="Histogram_Date.html">Histogram_Date</a></li><li><a href="Histogram_Int.html">Histogram_Int</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 05 2019 11:32:36 GMT+0100 (W. Europe Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 05 2019 12:13:43 GMT+0100 (W. Europe Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
