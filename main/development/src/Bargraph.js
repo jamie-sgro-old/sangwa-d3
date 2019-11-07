@@ -1,6 +1,6 @@
 /**
  * BarGraph - creates a series of bars (rectangles) based on x and y data
- * @DEPRECATED
+ *
  */
 class Bargraph extends Base_D3 {
   /** @constructor */
@@ -107,7 +107,7 @@ class Bargraph extends Base_D3 {
     path
       //.attr("transform", "translate(0," + obj.height + ")")
       .call(d3.axisTop(obj.getWidthScale(data)));
-  }
+  };
 
 
 
@@ -121,7 +121,7 @@ class Bargraph extends Base_D3 {
   getYAxis(path, obj, data) {
     path
       .call(d3.axisLeft(obj.getHeightScale(data)));
-  }
+  };
 
 
 
@@ -153,10 +153,10 @@ class Bargraph extends Base_D3 {
           break;
         case "width":
           path.attr("width", function(d, i) {
-            var range = d3.extent(obj.getMap(path.data()))
-            var numDays = d3.timeDay.count(range[0], range[1]) + 1
-            return obj.width / numDays
-          })
+            var range = d3.extent(obj.getMap(path.data()));
+            var numDays = d3.timeDay.count(range[0], range[1]) + 1;
+            return obj.width / numDays;
+          });
           break;
         case "height":
           path.attr("height", function(d) {
@@ -165,19 +165,19 @@ class Bargraph extends Base_D3 {
           break;
         case "fill":
           path.attr("fill", function(d) {
-            return colour(d[yLabel])
-          })
+            return colour(d[yLabel]);
+          });
           break;
         case "fillTransparent":
           path.attr("fill", function(d) {
             rtn = colour(d[yLabel]);
             return setAlpha(rtn, 0);
-          })
+          });
           break;
         case "y":
           path.attr("y", function(d) {
             return heightScale(d.name);
-          })
+          });
           break;
         case "cx":
           path.attr("cx", function(d) {
@@ -187,10 +187,10 @@ class Bargraph extends Base_D3 {
         case "cy":
           path.attr("cy", function(d) {
             return heightScale(d.name);
-          })
+          });
           break;
         case "r":
-          path.attr("r", heightScale.bandwidth()/2)
+          path.attr("r", heightScale.bandwidth()/2);
           break;
       };
     };
@@ -228,7 +228,7 @@ class Bargraph extends Base_D3 {
       .append("rect")
           .attr("class", "bar")
           .call(this.getAttr, this, ["x", "width", "height", "fill"])
-          .attr("y", 0)
+          .attr("y", 0);
 
     // add the x Axis
     this.canvas
@@ -243,4 +243,4 @@ class Bargraph extends Base_D3 {
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
   };
-}
+};
