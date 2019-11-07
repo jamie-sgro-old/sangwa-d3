@@ -2,7 +2,7 @@
  * BarGraph - creates a series of bars (rectangles) based on x and y data
  * @DEPRECATED
  */
-class BarGraph extends Base_D3 {
+class Bargraph extends Base_D3 {
   /** @constructor */
   constructor(width, height, margin, colour) {
     super(width, height, margin, colour);

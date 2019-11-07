@@ -1,7 +1,7 @@
 var running = true;
 
 if (running) {
-  b = new BarGraph(
+  b = new Bargraph(
     960,
     500,
     {top: 10, right: 30, bottom: 30, left: 30},
