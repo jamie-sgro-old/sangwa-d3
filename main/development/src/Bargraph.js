@@ -79,7 +79,8 @@ class Bargraph extends Base_D3 {
       .domain(d3.extent(data, function(d) {
         return new Date(d[xLabel]);
       }))
-      .range([0, this.width]);
+      .range([0, this.width])
+      .nice();
   };
 
 
@@ -151,7 +152,11 @@ class Bargraph extends Base_D3 {
           });
           break;
         case "width":
-          path.attr("width", widthScale.bandwidth())
+          path.attr("width", function(d, i) {
+            var range = d3.extent(obj.getMap(path.data()))
+            var numDays = d3.timeDay.count(range[0], range[1]) + 1
+            return obj.width / numDays
+          })
           break;
         case "height":
           path.attr("height", function(d) {
@@ -222,9 +227,7 @@ class Bargraph extends Base_D3 {
       .enter()
       .append("rect")
           .attr("class", "bar")
-          .attr("width", 60)
-          .attr("width", 3)
-          .call(this.getAttr, this, ["x", "height", "fill"])
+          .call(this.getAttr, this, ["x", "width", "height", "fill"])
           .attr("y", 0)
 
     // add the x Axis
