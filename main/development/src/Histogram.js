@@ -6,9 +6,9 @@ class Histogram extends Base_D3 {
   constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour);
 
-    this.binNum = binNum
-    this.yLabel = "value"
-  }
+    this.binNum = binNum;
+    this.yLabel = "value";
+  };
 
 
   /**
@@ -66,7 +66,7 @@ class Histogram extends Base_D3 {
     path
       .attr("transform", "translate(0," + obj.height + ")")
       .call(d3.axisBottom(obj.getWidthScale(data)));
-  }
+  };
 
 
 
@@ -80,7 +80,7 @@ class Histogram extends Base_D3 {
   getYAxis(path, obj, data) {
     path
       .call(d3.axisLeft(obj.getHeightScale(data)));
-  }
+  };
 
 
 
@@ -94,13 +94,11 @@ class Histogram extends Base_D3 {
   *
   */
   getAttr(path, obj, attributes) {
-    var key;
-
     //flatten data with d3.merge
     var widthScale = obj.getWidthScale(path.data());
     var heightScale = obj.getHeightScale(path.data());
 
-    for (key in attributes) {
+    for (var key in attributes) {
       switch (attributes[key]) {
         case "x":
           path.attr("x", function(d) {
@@ -109,23 +107,23 @@ class Histogram extends Base_D3 {
           break;
         case "y":
           path.attr("y", function(d) {
-            return heightScale(d.length)
+            return heightScale(d.length);
           });
           break;
         case "width":
           path.attr("width", function(d) {
-            var db = path.data()
+            var db = path.data();
             return widthScale(db[0].x1) - widthScale(db[0].x0) - 1;
           });
           break;
         case "height":
           path.attr("height", function(d) {
             return obj.height - heightScale(d.length);
-          })
+          });
           break;
         case "xText":
           path.attr("x", function(d) {
-            var db = path.data()
+            var db = path.data();
             return (widthScale(db[0].x1) - widthScale(db[0].x0)) / 2;
           });
           break;
@@ -162,7 +160,7 @@ class Histogram extends Base_D3 {
         .attr("class", "bar")
         .call(this.getAttr, this, ["x", "y", "width", "height"])
         .attr("transform", "translate(" + 1 + "," + 0 + ")")
-        .attr("fill", "steelblue")
+        .attr("fill", "steelblue");
 
     this.canvas.selectAll("rect.bar")
       .append("text")
@@ -201,7 +199,7 @@ class Histogram_Int extends Histogram {
   /** @constructor */
   constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour, binNum);
-  }
+  };
 
 
   /**
@@ -253,7 +251,7 @@ class Histogram_Date extends Histogram {
   /** @constructor */
   constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour, binNum);
-  }
+  };
 
 
   /**
@@ -271,7 +269,7 @@ class Histogram_Date extends Histogram {
     var max = this.max;
     var min = this.min;
     return d3.scaleTime()
-      .domain([min, max])
+      .domain([min, max]);
       /*
       .domain(d3.extent(data, function(d) {
         return new Date(d);
