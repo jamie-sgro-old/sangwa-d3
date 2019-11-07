@@ -10,5 +10,8 @@ define(function (require) {
 
     //print(messages.getHello());
 
-    require("../../../src/main.js");
+    require("./Base_D3.js");
+    require("./Histogram.js");
+    require("./Bargraph.js");
+    require("./test.js");
 });
