@@ -150,6 +150,9 @@ class Bargraph extends Base_D3 {
             return widthScale(parseTime(d[obj.xLabel]));
           });
           break;
+        case "width":
+          path.attr("width", widthScale.bandwidth())
+          break;
         case "height":
           path.attr("height", function(d) {
             return heightScale(d[yLabel]);
@@ -186,6 +189,24 @@ class Bargraph extends Base_D3 {
           break;
       };
     };
+  };
+
+
+
+  /**
+   * getMap - pre clean raw data in the form of a string that matches the date
+   * string provided
+   *
+   * @param  {array} rawData an array of json objects
+   * @return {array}         an array of parsed json objects according to
+   *  d3.timeParse
+   */
+  getMap(rawData) {
+    var xLabel = this.xLabel;
+    var parseTime = d3.timeParse("%Y-%m-%d");
+    return rawData.map(function(d, i) {
+      return parseTime(d[xLabel]);
+    });
   };
 
 
