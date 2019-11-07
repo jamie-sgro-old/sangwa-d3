@@ -8,6 +8,7 @@ class Bargraph extends Base_D3 {
     super(width, height, margin, colour);
 
     this.xLabel = "start_date";
+    this.yLabel = "value";
   };
 
 
@@ -19,9 +20,10 @@ class Bargraph extends Base_D3 {
    * @return {obj}      a linear scale as a hexidecimal or rgb
    */
   getColour(data) {
+    var yLabel = this.yLabel;
     return d3.scaleLinear()
       .domain([0, d3.max(data, function(d) {
-        return d.value;
+        return d[yLabel];
       })])
       .range([this.colourBottom, this.colourTop]);
   };
@@ -38,9 +40,10 @@ class Bargraph extends Base_D3 {
   *
   */
   getHeightScale(data) {
+    var yLabel = this.yLabel;
     return d3.scaleLinear()
       .domain([0, d3.max(data, function(d) {
-        return d.value;
+        return d[yLabel];
       })])
       .range([0, this.height]);
   };
@@ -76,7 +79,8 @@ class Bargraph extends Base_D3 {
       .domain(d3.extent(data, function(d) {
         return new Date(d[xLabel]);
       }))
-      .range([0, this.width]);
+      .range([0, this.width])
+      .nice();
   };
 
 
@@ -131,6 +135,8 @@ class Bargraph extends Base_D3 {
   *
   */
   getAttr(path, obj, attributes) {
+    var yLabel = obj.yLabel;
+
     var key;
     var parseTime = d3.timeParse("%Y-%m-%d");
 
@@ -145,19 +151,26 @@ class Bargraph extends Base_D3 {
             return widthScale(parseTime(d[obj.xLabel]));
           });
           break;
+        case "width":
+          path.attr("width", function(d, i) {
+            var range = d3.extent(obj.getMap(path.data()))
+            var numDays = d3.timeDay.count(range[0], range[1]) + 1
+            return obj.width / numDays
+          })
+          break;
         case "height":
           path.attr("height", function(d) {
-            return heightScale(d.value);
+            return heightScale(d[yLabel]);
           })
           break;
         case "fill":
           path.attr("fill", function(d) {
-            return colour(d.value)
+            return colour(d[yLabel])
           })
           break;
         case "fillTransparent":
           path.attr("fill", function(d) {
-            rtn = colour(d.value);
+            rtn = colour(d[yLabel]);
             return setAlpha(rtn, 0);
           })
           break;
@@ -168,7 +181,7 @@ class Bargraph extends Base_D3 {
           break;
         case "cx":
           path.attr("cx", function(d) {
-            return widthScale(d.value);
+            return widthScale(d[yLabel]);
           });
           break;
         case "cy":
@@ -186,6 +199,24 @@ class Bargraph extends Base_D3 {
 
 
   /**
+   * getMap - pre clean raw data in the form of a string that matches the date
+   * string provided
+   *
+   * @param  {array} rawData an array of json objects
+   * @return {array}         an array of parsed json objects according to
+   *  d3.timeParse
+   */
+  getMap(rawData) {
+    var xLabel = this.xLabel;
+    var parseTime = d3.timeParse("%Y-%m-%d");
+    return rawData.map(function(d, i) {
+      return parseTime(d[xLabel]);
+    });
+  };
+
+
+
+  /**
    * plot - Instantiate the visualization based on the data provided
    *
    * @param  {array} rawData an array of json objects with a common key
@@ -196,9 +227,7 @@ class Bargraph extends Base_D3 {
       .enter()
       .append("rect")
           .attr("class", "bar")
-          .attr("width", 60)
-          .attr("width", 3)
-          .call(this.getAttr, this, ["x", "height", "fill"])
+          .call(this.getAttr, this, ["x", "width", "height", "fill"])
           .attr("y", 0)
 
     // add the x Axis

@@ -44,13 +44,12 @@ class Histogram extends Base_D3 {
    * @param  {array} data the raw data used to be aggregated into 'bins'
    * @return {obj}      returns d3.histogram datastructure
    */
-  getBins(data) {
-    var widthScale = this.getWidthScale(data);
-    var binNum = this.binNum
+  getBins(obj, data) {
+    var widthScale = obj.getWidthScale(data);
 
     return d3.histogram()
       .domain(widthScale.domain())
-      .thresholds(widthScale.ticks(binNum))
+      .thresholds(widthScale.ticks(obj.binNum))
       (data);
   };
 
@@ -146,10 +145,15 @@ class Histogram extends Base_D3 {
    * @param  {array} rawData an array of json objects with a common key
    */
   plot(rawData) {
-    var map = this.getMap(rawData);
 
-    var data = this.getBins(map);
-    console.log(data);
+    var map = this.getMap(this, rawData);
+
+    this.max = d3.max(map);
+    this.min = d3.min(map);
+    //the widthScale data should be declared here with the data formatted as
+    //  map and considered constant
+
+    var data = this.getBins(this, map);
 
     this.canvas.selectAll("rect.bar")
       .data(data)
@@ -210,23 +214,28 @@ class Histogram_Int extends Histogram {
   *
   */
   getWidthScale(data) {
+    // TODO: these need a constant for max which means there doesn't need to be
+    // a parameter which in turn means in can be transformed into a variable
+    var max = this.max;
     return d3.scaleLinear()
-      .domain([0, d3.max(data)])
-      .rangeRound([0, this.width]);
+      .domain([0, max])
+      .rangeRound([0, this.width])
+      .nice();
   };
 
 
   /**
    * getMap - pre clean raw data in the form of an integer to float messy integers
    *
+   * i.e. turns [{value: "5"},{value: "1"},{value: "35"}] into [5,1,35]
+   *
    * @param  {array} rawData an array of json objects
    * @return {array}         an array of parsed json objects according to
    *  parseFloat()
    */
-  getMap(rawData) {
-    var yLabel = this.yLabel
+  getMap(obj, rawData) {
     return rawData.map(function(d, i) {
-      return parseFloat(d[yLabel]);
+      return parseFloat(d[obj.yLabel]);
     });
   };
 }; // End Class
@@ -257,11 +266,19 @@ class Histogram_Date extends Histogram {
   *
   */
   getWidthScale(data) {
+    // TODO: these need a constant for max which means there doesn't need to be
+    // a parameter which in turn means in can be transformed into a variable
+    var max = this.max;
+    var min = this.min;
     return d3.scaleTime()
+      .domain([min, max])
+      /*
       .domain(d3.extent(data, function(d) {
         return new Date(d);
       }))
-      .rangeRound([0, this.width]);
+      */
+      .rangeRound([0, this.width])
+      .nice();
   };
 
 
@@ -274,11 +291,10 @@ class Histogram_Date extends Histogram {
    * @return {array}         an array of parsed json objects according to
    *  d3.timeParse
    */
-  getMap(rawData) {
-    var yLabel = this.yLabel
+  getMap(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
-      return parseTime(d[yLabel]);
+      return parseTime(d[obj.yLabel]);
     });
   };
 }; // End Class
