@@ -1,16 +1,16 @@
-var running = "hist";
+var running = "bar";
 
 if (running == "bar") {
   b = new Bargraph(
-    960,
-    500,
+    800,
+    250,
     {top: 30, right: 30, bottom: 30, left: 30},
     {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
   );
 
   dataDate = [
-    {start_date: "2004-04-10", value: 2},
-    {start_date: "2004-04-11", value: 2},
+    {start_date: "2004-04-07", value: 2},
+    {start_date: "2004-04-09", value: 2},
     {start_date: "2004-04-12", value: 2},
     {start_date: "2004-04-13", value: 2},
     {start_date: "2004-04-14", value: 2},
