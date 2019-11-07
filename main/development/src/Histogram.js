@@ -148,6 +148,8 @@ class Histogram extends Base_D3 {
 
     var map = this.getMap(this, rawData);
 
+    this.max = d3.max(map);
+    this.min = d3.min(map);
     //the widthScale data should be declared here with the data formatted as
     //  map and considered constant
 
@@ -212,8 +214,11 @@ class Histogram_Int extends Histogram {
   *
   */
   getWidthScale(data) {
+    // TODO: these need a constant for max which means there doesn't need to be
+    // a parameter which in turn means in can be transformed into a variable
+    var max = this.max;
     return d3.scaleLinear()
-      .domain([0, d3.max(data)])
+      .domain([0, max])
       .rangeRound([0, this.width])
       .nice();
   };
@@ -261,10 +266,17 @@ class Histogram_Date extends Histogram {
   *
   */
   getWidthScale(data) {
+    // TODO: these need a constant for max which means there doesn't need to be
+    // a parameter which in turn means in can be transformed into a variable
+    var max = this.max;
+    var min = this.min;
     return d3.scaleTime()
+      .domain([min, max])
+      /*
       .domain(d3.extent(data, function(d) {
         return new Date(d);
       }))
+      */
       .rangeRound([0, this.width])
       .nice();
   };
