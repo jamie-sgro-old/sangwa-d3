@@ -8,7 +8,9 @@ define(function (require) {
     // full IDs, like:
     //var print = require('print');
 
-    print(messages.getHello());
+    //print(messages.getHello());
 
     require("../../../src/saD3.js");
+    require("../../../src/Bargraph.js");
+    require("../../../src/test.js");
 });
