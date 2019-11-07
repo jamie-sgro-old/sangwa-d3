@@ -8,6 +8,7 @@ class Bargraph extends Base_D3 {
     super(width, height, margin, colour);
 
     this.xLabel = "start_date";
+    this.yLabel = "value";
   };
 
 
@@ -19,9 +20,10 @@ class Bargraph extends Base_D3 {
    * @return {obj}      a linear scale as a hexidecimal or rgb
    */
   getColour(data) {
+    var yLabel = this.yLabel;
     return d3.scaleLinear()
       .domain([0, d3.max(data, function(d) {
-        return d.value;
+        return d[yLabel];
       })])
       .range([this.colourBottom, this.colourTop]);
   };
@@ -38,9 +40,10 @@ class Bargraph extends Base_D3 {
   *
   */
   getHeightScale(data) {
+    var yLabel = this.yLabel;
     return d3.scaleLinear()
       .domain([0, d3.max(data, function(d) {
-        return d.value;
+        return d[yLabel];
       })])
       .range([0, this.height]);
   };
@@ -131,6 +134,8 @@ class Bargraph extends Base_D3 {
   *
   */
   getAttr(path, obj, attributes) {
+    var yLabel = obj.yLabel;
+
     var key;
     var parseTime = d3.timeParse("%Y-%m-%d");
 
@@ -147,17 +152,17 @@ class Bargraph extends Base_D3 {
           break;
         case "height":
           path.attr("height", function(d) {
-            return heightScale(d.value);
+            return heightScale(d[yLabel]);
           })
           break;
         case "fill":
           path.attr("fill", function(d) {
-            return colour(d.value)
+            return colour(d[yLabel])
           })
           break;
         case "fillTransparent":
           path.attr("fill", function(d) {
-            rtn = colour(d.value);
+            rtn = colour(d[yLabel]);
             return setAlpha(rtn, 0);
           })
           break;
@@ -168,7 +173,7 @@ class Bargraph extends Base_D3 {
           break;
         case "cx":
           path.attr("cx", function(d) {
-            return widthScale(d.value);
+            return widthScale(d[yLabel]);
           });
           break;
         case "cy":
