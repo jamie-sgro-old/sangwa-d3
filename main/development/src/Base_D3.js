@@ -36,7 +36,7 @@ class Base_D3 {
     this.getSvgSize = function(path, obj) {
       path
         .attr("width", obj.width + obj.margin.left + obj.margin.right)
-        .attr("height", obj.height + obj.margin.top + obj.margin.bottom)
+        .attr("height", obj.height + obj.margin.top + obj.margin.bottom);
     };
 
     this.svg = d3.select("body")
