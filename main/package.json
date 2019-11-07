@@ -1,8 +1,8 @@
 {
   "name": "saD3",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "D3 visualization library",
-  "main": "saD3.js",
+  "main": "saD3.min.js",
   "scripts": {
     "test": "echo test"
   },
