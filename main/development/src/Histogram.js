@@ -145,7 +145,11 @@ class Histogram extends Base_D3 {
    * @param  {array} rawData an array of json objects with a common key
    */
   plot(rawData) {
-    var map = this.getMap(rawData);
+
+    var map = this.getMap(this, rawData);
+
+    //the widthScale data should be declared here with the data formatted as
+    //  map and considered constant
 
     var data = this.getBins(this, map);
 
@@ -208,25 +212,25 @@ class Histogram_Int extends Histogram {
   *
   */
   getWidthScale(data) {
-    console.log(d3.max(data))
-    // TODO: the error is with the max range
     return d3.scaleLinear()
       .domain([0, d3.max(data)])
-      .rangeRound([0, this.width]);
+      .rangeRound([0, this.width])
+      .nice();
   };
 
 
   /**
    * getMap - pre clean raw data in the form of an integer to float messy integers
    *
+   * i.e. turns [{value: "5"},{value: "1"},{value: "35"}] into [5,1,35]
+   *
    * @param  {array} rawData an array of json objects
    * @return {array}         an array of parsed json objects according to
    *  parseFloat()
    */
-  getMap(rawData) {
-    var yLabel = this.yLabel
+  getMap(obj, rawData) {
     return rawData.map(function(d, i) {
-      return parseFloat(d[yLabel]);
+      return parseFloat(d[obj.yLabel]);
     });
   };
 }; // End Class
@@ -261,7 +265,8 @@ class Histogram_Date extends Histogram {
       .domain(d3.extent(data, function(d) {
         return new Date(d);
       }))
-      .rangeRound([0, this.width]);
+      .rangeRound([0, this.width])
+      .nice();
   };
 
 
@@ -274,11 +279,10 @@ class Histogram_Date extends Histogram {
    * @return {array}         an array of parsed json objects according to
    *  d3.timeParse
    */
-  getMap(rawData) {
-    var yLabel = this.yLabel
+  getMap(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
-      return parseTime(d[yLabel]);
+      return parseTime(d[obj.yLabel]);
     });
   };
 }; // End Class
