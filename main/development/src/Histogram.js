@@ -44,13 +44,12 @@ class Histogram extends Base_D3 {
    * @param  {array} data the raw data used to be aggregated into 'bins'
    * @return {obj}      returns d3.histogram datastructure
    */
-  getBins(data) {
-    var widthScale = this.getWidthScale(data);
-    var binNum = this.binNum
+  getBins(obj, data) {
+    var widthScale = obj.getWidthScale(data);
 
     return d3.histogram()
       .domain(widthScale.domain())
-      .thresholds(widthScale.ticks(binNum))
+      .thresholds(widthScale.ticks(obj.binNum))
       (data);
   };
 
@@ -148,8 +147,7 @@ class Histogram extends Base_D3 {
   plot(rawData) {
     var map = this.getMap(rawData);
 
-    var data = this.getBins(map);
-    console.log(data);
+    var data = this.getBins(this, map);
 
     this.canvas.selectAll("rect.bar")
       .data(data)
@@ -210,6 +208,8 @@ class Histogram_Int extends Histogram {
   *
   */
   getWidthScale(data) {
+    console.log(d3.max(data))
+    // TODO: the error is with the max range
     return d3.scaleLinear()
       .domain([0, d3.max(data)])
       .rangeRound([0, this.width]);
