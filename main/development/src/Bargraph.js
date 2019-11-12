@@ -203,7 +203,18 @@ class Bargraph extends Base_D3 {
    */
   plot(rawData) {
 
-    var data = this.getMap(this, rawData)
+    var data = this.getMap(this, rawData);
+
+    var xLabel = this.xLabel;
+
+    var flattenX = data.map(function(x) {
+        return x[xLabel];
+    });
+
+    this.min = d3.min(flattenX);
+    this.max = d3.max(flattenX);
+
+    this.widthScale = this.getWidthScale(this.min, this.max);
 
     this.canvas.selectAll("rect.bar")
       .data(data)
