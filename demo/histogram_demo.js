@@ -2,8 +2,8 @@ var running = true;
 
 if (running) {
   h = new Histogram_Int(
-    960,
-    500,
+    800,
+    300,
     {top: 10, right: 30, bottom: 30, left: 30},
     {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
     binNum = 10
@@ -39,8 +39,8 @@ if (running) {
 
 
   h = new Histogram_Date(
-    960,
-    500,
+    800,
+    300,
     {top: 10, right: 30, bottom: 30, left: 30},
     {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
     binNum = 10
