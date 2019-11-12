@@ -21,18 +21,9 @@ class Histogram_Date extends Histogram {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale() {
-    // TODO: these need a constant for max which means there doesn't need to be
-    // a parameter which in turn means in can be transformed into a variable
-    var max = this.max;
-    var min = this.min;
+  getWidthScale(min, max) {
     return d3.scaleTime()
       .domain([min, max])
-      /*
-      .domain(d3.extent(data, function(d) {
-        return new Date(d);
-      }))
-      */
       .rangeRound([0, this.width])
       .nice();
   };

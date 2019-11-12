@@ -10,6 +10,8 @@ class Histogram extends Base_D3 {
     this.yLabel = "value";
 
     //init as empty to be modified when data is provided
+    this.max = 0;
+    this.min = 0;
     this.widthScale = function() {};
   };
 
@@ -98,11 +100,10 @@ class Histogram extends Base_D3 {
 
     var map = this.getMap(this, rawData);
 
-    this.max = d3.max(map);
     this.min = d3.min(map);
-    //the widthScale data should be declared here with the data formatted as
-    //  map and considered constant
-    this.widthScale = this.getWidthScale(map)
+    this.max = d3.max(map);
+
+    this.widthScale = this.getWidthScale(this.min, this.max)
 
     var data = this.getBins(this, map);
 
@@ -119,7 +120,7 @@ class Histogram extends Base_D3 {
     this.canvas
       .append("g")
         .attr("class", "x axis")
-        .call(this.getXAxis, this, data);
+        .call(this.getXAxis, this);
 
     // add the y Axis
     this.canvas
