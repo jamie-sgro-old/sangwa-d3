@@ -269,7 +269,7 @@ class Histogram_Date extends Histogram {
     var max = this.max;
     var min = this.min;
     return d3.scaleTime()
-      .domain([min, max]);
+      .domain([min, max])
       /*
       .domain(d3.extent(data, function(d) {
         return new Date(d);
