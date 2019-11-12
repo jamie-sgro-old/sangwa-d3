@@ -190,50 +190,6 @@ class Bargraph extends Base_D3 {
   };
 
 
-  /**
-  * Constructor for reused attributes for d3 elements. All updates to common
-  * atrributes are stored in this single function for rapid updating
-  *
-  * @param {obj} path - reference to the d3 object calling the function
-  * @param {obj} obj - the class element typically evoked though 'this.'
-  * @param {array} attributes - array of strings that match d3 attributes
-  *
-  */
-  getAttr(path, obj, attributes) {
-    for (var key in attributes) {
-      switch (attributes[key]) {
-        case "x":
-          obj._getAttr_x(path, obj);
-          break;
-        case "y":
-          obj._getAttr_y(path, obj);
-          break;
-        case "width":
-          obj._getAttr_width(path, obj);
-          break;
-        case "height":
-          obj._getAttr_height(path, obj);
-          break;
-        case "fill":
-          obj._getAttr_fill(path, obj);
-          break;
-        case "fillTransparent":
-          obj._getAttr_fillTransparent(path, obj);
-          break;
-        case "cx":
-          obj._getAttr_cx(path, obj);
-          break;
-        case "cy":
-          obj._getAttr_cy(path, obj);
-          break;
-        case "r":
-          obj._getAttr_r(path, obj);
-          break;
-      };
-    };
-  };
-
-
 
   /**
    * getMap - pre clean raw data in the form of a string that matches the date
