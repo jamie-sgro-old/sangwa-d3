@@ -44,7 +44,7 @@ class Bargraph extends Base_D3 {
       .domain([0, d3.max(data, function(d) {
         return d[yLabel];
       })])
-      .range([0, this.height]);
+      .range([this.height, 0]);
   };
 
 
@@ -95,35 +95,6 @@ class Bargraph extends Base_D3 {
 
 
 
-  /**
-  * getXAxis - create an x axis on left within the g element
-  *
-  * @param   {obj} path - reference to the d3 object calling the function
-  * @param   {obj} obj - the class element typically evoked though 'this.'
-  * @param   {obj} data - reference to the data from d3 object calling the function
-  */
-  getXAxis(path, obj, data) {
-    path
-      //.attr("transform", "translate(0," + obj.height + ")")
-      .call(d3.axisTop(obj.getWidthScale(data)));
-  };
-
-
-
-  /**
-  * getYAxis - create a y axis on the top of svg within the g element
-  *
-  * @param   {obj} path - reference to the d3 object calling the function
-  * @param   {obj} obj - the class element typically evoked though 'this.'
-  * @param   {obj} data - reference to the data from d3 object calling the function
-  */
-  getYAxis(path, obj, data) {
-    path
-      .call(d3.axisLeft(obj.getHeightScale(data)));
-  };
-
-
-
   _getAttr_x(path, obj) {
     var parseTime = d3.timeParse("%Y-%m-%d");
 
@@ -134,8 +105,12 @@ class Bargraph extends Base_D3 {
     });
   };
   _getAttr_y(path, obj) {
+    var heightScale = obj.getHeightScale(path.data());
+
     path.attr("y", function(d) {
-      return heightScale(d.name);
+      var yLabel = obj.yLabel;
+
+      return heightScale(d[yLabel]);
     });
   };
   _getAttr_width(path, obj) {
@@ -151,7 +126,7 @@ class Bargraph extends Base_D3 {
     var heightScale = obj.getHeightScale(path.data());
 
     path.attr("height", function(d) {
-      return heightScale(d[yLabel]);
+      return obj.height - heightScale(d[yLabel]);
     })
   };
   _getAttr_fill(path, obj) {
@@ -220,8 +195,7 @@ class Bargraph extends Base_D3 {
       .enter()
       .append("rect")
           .attr("class", "bar")
-          .call(this.getAttr, this, ["x", "width", "height", "fill"])
-          .attr("y", 0);
+          .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
 
     // add the x Axis
     this.canvas

@@ -93,4 +93,33 @@ class Base_D3 {
       };
     };
   };
+
+
+
+  /**
+  * getXAxis - create an x axis on left within the g element
+  *
+  * @param   {obj} path - reference to the d3 object calling the function
+  * @param   {obj} obj - the class element typically evoked though 'this.'
+  * @param   {obj} data - reference to the data from d3 object calling the function
+  */
+  getXAxis(path, obj, data) {
+    path
+      .attr("transform", "translate(0," + obj.height + ")")
+      .call(d3.axisBottom(obj.getWidthScale(data)));
+  };
+
+
+
+  /**
+  * getYAxis - create a y axis on the top of svg within the g element
+  *
+  * @param   {obj} path - reference to the d3 object calling the function
+  * @param   {obj} obj - the class element typically evoked though 'this.'
+  * @param   {obj} data - reference to the data from d3 object calling the function
+  */
+  getYAxis(path, obj, data) {
+    path
+      .call(d3.axisLeft(obj.getHeightScale(data)));
+  };
 }; // End Class
