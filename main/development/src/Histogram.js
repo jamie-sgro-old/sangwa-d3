@@ -10,7 +10,7 @@ class Histogram extends Base_D3 {
     this.yLabel = "value";
 
     //init as empty to be modified when data is provided
-    this.widthScale = this.getWidthScale();
+    this.widthScale = function() {};
   };
 
 
@@ -33,7 +33,7 @@ class Histogram extends Base_D3 {
 
 
   /** Polymorphism */
-  getWidthScale(map) {};
+  getWidthScale() {};
 
 
 

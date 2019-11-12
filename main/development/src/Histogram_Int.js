@@ -20,7 +20,7 @@ class Histogram_Int extends Histogram {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(data) {
+  getWidthScale() {
     // TODO: these need a constant for max which means there doesn't need to be
     // a parameter which in turn means in can be transformed into a variable
     var max = this.max;
