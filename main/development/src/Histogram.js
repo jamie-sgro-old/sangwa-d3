@@ -85,14 +85,6 @@ class Histogram extends Base_D3 {
       return obj.height - heightScale(d.length);
     });
   };
-  _getAttr_xText(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-
-    path.attr("x", function(d) {
-      var db = path.data();
-      return (widthScale(db[0].x1) - widthScale(db[0].x0)) / 2;
-    });
-  };
 
 
 
@@ -126,17 +118,7 @@ class Histogram extends Base_D3 {
         .attr("transform", "translate(" + 1 + "," + 0 + ")")
         .attr("fill", "steelblue");
 
-    this.canvas.selectAll("rect.bar")
-      .append("text")
-        .attr("dy", ".75em")
-        .attr("y", 6)
-        .call(this.getAttr, this, ["xText"])
-        .attr("text-anchor", "middle")
-        .text(function(d) {
-          var formatCount = d3.format(",.0f");
-          return formatCount(d.length);
-        });
-
+    // add the x Axis
     this.canvas
       .append("g")
         .attr("class", "x axis")
