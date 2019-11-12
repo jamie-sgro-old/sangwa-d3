@@ -57,10 +57,8 @@ class Histogram extends Base_D3 {
 
 
   _getAttr_x(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-
     path.attr("x", function(d) {
-      return widthScale(d.x0);
+      return obj.widthScale(d.x0);
     });
   };
   _getAttr_y(path, obj) {
@@ -71,11 +69,9 @@ class Histogram extends Base_D3 {
     });
   };
   _getAttr_width(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-
     path.attr("width", function(d) {
       var db = path.data();
-      return widthScale(db[0].x1) - widthScale(db[0].x0) - 1;
+      return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
     });
   };
   _getAttr_height(path, obj) {
