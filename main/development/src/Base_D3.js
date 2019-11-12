@@ -48,4 +48,78 @@ class Base_D3 {
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
   };
+
+
+
+  /**
+  * Constructor for reused attributes for d3 elements. All updates to common
+  * atrributes are stored in this single function for rapid updating
+  *
+  * @param {obj} path - reference to the d3 object calling the function
+  * @param {obj} obj - the class element typically evoked though 'this.'
+  * @param {array} attributes - array of strings that match d3 attributes
+  *
+  */
+  getAttr(path, obj, attributes) {
+    for (var key in attributes) {
+      switch (attributes[key]) {
+        case "x":
+          obj._getAttr_x(path, obj);
+          break;
+        case "y":
+          obj._getAttr_y(path, obj);
+          break;
+        case "width":
+          obj._getAttr_width(path, obj);
+          break;
+        case "height":
+          obj._getAttr_height(path, obj);
+          break;
+        case "fill":
+          obj._getAttr_fill(path, obj);
+          break;
+        case "fillTransparent":
+          obj._getAttr_fillTransparent(path, obj);
+          break;
+        case "cx":
+          obj._getAttr_cx(path, obj);
+          break;
+        case "cy":
+          obj._getAttr_cy(path, obj);
+          break;
+        case "r":
+          obj._getAttr_r(path, obj);
+          break;
+      };
+    };
+  };
+
+
+
+  /**
+  * getXAxis - create an x axis on left within the g element
+  *
+  * @param   {obj} path - reference to the d3 object calling the function
+  * @param   {obj} obj - the class element typically evoked though 'this.'
+  * @param   {obj} data - reference to the data from d3 object calling the function
+  */
+  getXAxis(path, obj, data) {
+    path
+      .attr("transform", "translate(0," + obj.height + ")")
+      .call(d3.axisBottom(obj.getWidthScale(data)));
+  };
+
+
+
+  /**
+  * getYAxis - create a y axis on the top of svg within the g element
+  *
+  * @param   {obj} path - reference to the d3 object calling the function
+  * @param   {obj} obj - the class element typically evoked though 'this.'
+  * @param   {obj} data - reference to the data from d3 object calling the function
+  */
+  getYAxis(path, obj, data) {
+    path
+      .call(d3.axisLeft(obj.getHeightScale(data)));
+  };
 }; // End Class

@@ -1,6 +1,5 @@
 /**
  * BarGraph - creates a series of bars (rectangles) based on x and y data
- *
  */
 class Bargraph extends Base_D3 {
   /** @constructor */
@@ -45,7 +44,7 @@ class Bargraph extends Base_D3 {
       .domain([0, d3.max(data, function(d) {
         return d[yLabel];
       })])
-      .range([0, this.height]);
+      .range([this.height, 0]);
   };
 
 
@@ -96,104 +95,73 @@ class Bargraph extends Base_D3 {
 
 
 
-  /**
-  * getXAxis - create an x axis on left within the g element
-  *
-  * @param   {obj} path - reference to the d3 object calling the function
-  * @param   {obj} obj - the class element typically evoked though 'this.'
-  * @param   {obj} data - reference to the data from d3 object calling the function
-  */
-  getXAxis(path, obj, data) {
-    path
-      //.attr("transform", "translate(0," + obj.height + ")")
-      .call(d3.axisTop(obj.getWidthScale(data)));
-  };
-
-
-
-  /**
-  * getYAxis - create a y axis on the top of svg within the g element
-  *
-  * @param   {obj} path - reference to the d3 object calling the function
-  * @param   {obj} obj - the class element typically evoked though 'this.'
-  * @param   {obj} data - reference to the data from d3 object calling the function
-  */
-  getYAxis(path, obj, data) {
-    path
-      .call(d3.axisLeft(obj.getHeightScale(data)));
-  };
-
-
-
-  /**
-  * Constructor for reused attributes for d3 elements. All updates to common
-  * atrributes are stored in this single function for rapid updating
-  *
-  * @param {obj} path - reference to the d3 object calling the function
-  * @param {obj} obj - the class element typically evoked though 'this.'
-  * @param {array} attributes - array of strings that match d3 attributes
-  *
-  */
-  getAttr(path, obj, attributes) {
-    var yLabel = obj.yLabel;
-
-    var key;
+  _getAttr_x(path, obj) {
     var parseTime = d3.timeParse("%Y-%m-%d");
 
     var widthScale = obj.getWidthScale(path.data());
+
+    path.attr("x", function(d) {
+      return widthScale(parseTime(d[obj.xLabel]));
+    });
+  };
+  _getAttr_y(path, obj) {
     var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("y", function(d) {
+      var yLabel = obj.yLabel;
+
+      return heightScale(d[yLabel]);
+    });
+  };
+  _getAttr_width(path, obj) {
+    path.attr("width", function(d, i) {
+      var range = d3.extent(obj.getMap(path.data()));
+      var numDays = d3.timeDay.count(range[0], range[1]) + 1;
+      return obj.width / numDays;
+    });
+  };
+  _getAttr_height(path, obj) {
+    var yLabel = obj.yLabel;
+
+    var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("height", function(d) {
+      return obj.height - heightScale(d[yLabel]);
+    })
+  };
+  _getAttr_fill(path, obj) {
+    var yLabel = obj.yLabel;
+
     var colour = obj.getColour(path.data());
 
-    for (key in attributes) {
-      switch (attributes[key]) {
-        case "x":
-          path.attr("x", function(d) {
-            return widthScale(parseTime(d[obj.xLabel]));
-          });
-          break;
-        case "width":
-          path.attr("width", function(d, i) {
-            var range = d3.extent(obj.getMap(path.data()));
-            var numDays = d3.timeDay.count(range[0], range[1]) + 1;
-            return obj.width / numDays;
-          });
-          break;
-        case "height":
-          path.attr("height", function(d) {
-            return heightScale(d[yLabel]);
-          })
-          break;
-        case "fill":
-          path.attr("fill", function(d) {
-            return colour(d[yLabel]);
-          });
-          break;
-        case "fillTransparent":
-          path.attr("fill", function(d) {
-            rtn = colour(d[yLabel]);
-            return setAlpha(rtn, 0);
-          });
-          break;
-        case "y":
-          path.attr("y", function(d) {
-            return heightScale(d.name);
-          });
-          break;
-        case "cx":
-          path.attr("cx", function(d) {
-            return widthScale(d[yLabel]);
-          });
-          break;
-        case "cy":
-          path.attr("cy", function(d) {
-            return heightScale(d.name);
-          });
-          break;
-        case "r":
-          path.attr("r", heightScale.bandwidth()/2);
-          break;
-      };
-    };
+    path.attr("fill", function(d) {
+      return colour(d[yLabel]);
+    });
+  };
+  _getAttr_fillTransparent(path, obj) {
+    var colour = obj.getColour(path.data());
+
+    path.attr("fill", function(d) {
+      rtn = colour(d[yLabel]);
+      return setAlpha(rtn, 0);
+    });
+  };
+  _getAttr_cx(path, obj) {
+    var widthScale = obj.getWidthScale(path.data());
+
+    path.attr("cx", function(d) {
+      return widthScale(d[yLabel]);
+    });
+  };
+  _getAttr_cy(path, obj) {
+    var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("cy", function(d) {
+      return heightScale(d.name);
+    });
+  };
+  _getAttr_r(path, obj) {
+    path.attr("r", heightScale.bandwidth()/2);
   };
 
 
@@ -227,8 +195,7 @@ class Bargraph extends Base_D3 {
       .enter()
       .append("rect")
           .attr("class", "bar")
-          .call(this.getAttr, this, ["x", "width", "height", "fill"])
-          .attr("y", 0);
+          .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
 
     // add the x Axis
     this.canvas
