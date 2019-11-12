@@ -1,10 +1,10 @@
 var running = true;
 
 if (running) {
-  b = new BarGraph(
+  b = new Bargraph(
     960,
     500,
-    {top: 10, right: 30, bottom: 30, left: 30},
+    {top: 30, right: 30, bottom: 30, left: 30},
     {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
   );
 
