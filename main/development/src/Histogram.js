@@ -8,6 +8,9 @@ class Histogram extends Base_D3 {
 
     this.binNum = binNum;
     this.yLabel = "value";
+
+    //init as empty to be modified when data is provided
+    this.widthScale = this.getWidthScale();
   };
 
 
@@ -45,11 +48,9 @@ class Histogram extends Base_D3 {
    * @return {obj}      returns d3.histogram datastructure
    */
   getBins(obj, data) {
-    var widthScale = obj.getWidthScale(data);
-
     return d3.histogram()
-      .domain(widthScale.domain())
-      .thresholds(widthScale.ticks(obj.binNum))
+      .domain(obj.widthScale.domain())
+      .thresholds(obj.widthScale.ticks(obj.binNum))
       (data);
   };
 
@@ -71,7 +72,6 @@ class Histogram extends Base_D3 {
   };
   _getAttr_width(path, obj) {
     var widthScale = obj.getWidthScale(path.data());
-    var heightScale = obj.getHeightScale(path.data());
 
     path.attr("width", function(d) {
       var db = path.data();
@@ -106,6 +106,7 @@ class Histogram extends Base_D3 {
     this.min = d3.min(map);
     //the widthScale data should be declared here with the data formatted as
     //  map and considered constant
+    this.widthScale = this.getWidthScale(map)
 
     var data = this.getBins(this, map);
 
