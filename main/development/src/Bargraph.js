@@ -1,6 +1,5 @@
 /**
  * BarGraph - creates a series of bars (rectangles) based on x and y data
- *
  */
 class Bargraph extends Base_D3 {
   /** @constructor */
@@ -125,6 +124,72 @@ class Bargraph extends Base_D3 {
 
 
 
+  _getAttr_x(path, obj) {
+    var parseTime = d3.timeParse("%Y-%m-%d");
+
+    var widthScale = obj.getWidthScale(path.data());
+
+    path.attr("x", function(d) {
+      return widthScale(parseTime(d[obj.xLabel]));
+    });
+  };
+  _getAttr_y(path, obj) {
+    path.attr("y", function(d) {
+      return heightScale(d.name);
+    });
+  };
+  _getAttr_width(path, obj) {
+    path.attr("width", function(d, i) {
+      var range = d3.extent(obj.getMap(path.data()));
+      var numDays = d3.timeDay.count(range[0], range[1]) + 1;
+      return obj.width / numDays;
+    });
+  };
+  _getAttr_height(path, obj) {
+    var yLabel = obj.yLabel;
+
+    var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("height", function(d) {
+      return heightScale(d[yLabel]);
+    })
+  };
+  _getAttr_fill(path, obj) {
+    var yLabel = obj.yLabel;
+
+    var colour = obj.getColour(path.data());
+
+    path.attr("fill", function(d) {
+      return colour(d[yLabel]);
+    });
+  };
+  _getAttr_fillTransparent(path, obj) {
+    var colour = obj.getColour(path.data());
+
+    path.attr("fill", function(d) {
+      rtn = colour(d[yLabel]);
+      return setAlpha(rtn, 0);
+    });
+  };
+  _getAttr_cx(path, obj) {
+    var widthScale = obj.getWidthScale(path.data());
+
+    path.attr("cx", function(d) {
+      return widthScale(d[yLabel]);
+    });
+  };
+  _getAttr_cy(path, obj) {
+    var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("cy", function(d) {
+      return heightScale(d.name);
+    });
+  };
+  _getAttr_r(path, obj) {
+    path.attr("r", heightScale.bandwidth()/2);
+  };
+
+
   /**
   * Constructor for reused attributes for d3 elements. All updates to common
   * atrributes are stored in this single function for rapid updating
@@ -135,62 +200,34 @@ class Bargraph extends Base_D3 {
   *
   */
   getAttr(path, obj, attributes) {
-    var yLabel = obj.yLabel;
-
-    var key;
-    var parseTime = d3.timeParse("%Y-%m-%d");
-
-    var widthScale = obj.getWidthScale(path.data());
-    var heightScale = obj.getHeightScale(path.data());
-    var colour = obj.getColour(path.data());
-
-    for (key in attributes) {
+    for (var key in attributes) {
       switch (attributes[key]) {
         case "x":
-          path.attr("x", function(d) {
-            return widthScale(parseTime(d[obj.xLabel]));
-          });
-          break;
-        case "width":
-          path.attr("width", function(d, i) {
-            var range = d3.extent(obj.getMap(path.data()));
-            var numDays = d3.timeDay.count(range[0], range[1]) + 1;
-            return obj.width / numDays;
-          });
-          break;
-        case "height":
-          path.attr("height", function(d) {
-            return heightScale(d[yLabel]);
-          })
-          break;
-        case "fill":
-          path.attr("fill", function(d) {
-            return colour(d[yLabel]);
-          });
-          break;
-        case "fillTransparent":
-          path.attr("fill", function(d) {
-            rtn = colour(d[yLabel]);
-            return setAlpha(rtn, 0);
-          });
+          obj._getAttr_x(path, obj);
           break;
         case "y":
-          path.attr("y", function(d) {
-            return heightScale(d.name);
-          });
+          obj._getAttr_y(path, obj);
+          break;
+        case "width":
+          obj._getAttr_width(path, obj);
+          break;
+        case "height":
+          obj._getAttr_height(path, obj);
+          break;
+        case "fill":
+          obj._getAttr_fill(path, obj);
+          break;
+        case "fillTransparent":
+          obj._getAttr_fillTransparent(path, obj);
           break;
         case "cx":
-          path.attr("cx", function(d) {
-            return widthScale(d[yLabel]);
-          });
+          obj._getAttr_cx(path, obj);
           break;
         case "cy":
-          path.attr("cy", function(d) {
-            return heightScale(d.name);
-          });
+          obj._getAttr_cy(path, obj);
           break;
         case "r":
-          path.attr("r", heightScale.bandwidth()/2);
+          obj._getAttr_r(path, obj);
           break;
       };
     };
