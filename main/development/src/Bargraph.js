@@ -115,7 +115,7 @@ class Bargraph extends Base_D3 {
   };
   _getAttr_width(path, obj) {
     path.attr("width", function(d, i) {
-      var range = d3.extent(obj.getMapOld(path.data()));
+      var range = d3.extent(obj.getMapOld(obj, path.data()));
       var numDays = d3.timeDay.count(range[0], range[1]) + 1;
       return obj.width / numDays;
     });
@@ -166,11 +166,10 @@ class Bargraph extends Base_D3 {
 
 
 
-  getMapOld(rawData) {
-    var xLabel = this.xLabel;
+  getMapOld(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
-      return parseTime(d[xLabel]);
+      return parseTime(d[obj.xLabel]);
     });
   };
 
