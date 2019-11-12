@@ -96,12 +96,10 @@ class Bargraph extends Base_D3 {
 
 
   _getAttr_x(path, obj) {
-    var parseTime = d3.timeParse("%Y-%m-%d");
-
     var widthScale = obj.getWidthScale(path.data());
 
     path.attr("x", function(d) {
-      return widthScale(parseTime(d[obj.xLabel]));
+      return widthScale(d[obj.xLabel]);
     });
   };
   _getAttr_y(path, obj) {
@@ -114,11 +112,14 @@ class Bargraph extends Base_D3 {
     });
   };
   _getAttr_width(path, obj) {
-    path.attr("width", function(d, i) {
-      var range = d3.extent(obj.getMapOld(obj, path.data()));
-      var numDays = d3.timeDay.count(range[0], range[1]) + 1;
-      return obj.width / numDays;
+    var flattenX = path.data().map(function(x) {
+        return x[obj.xLabel];
     });
+
+    var range = d3.extent(flattenX);
+    var numDays = d3.timeDay.count(range[0], range[1]);
+
+    path.attr("width", obj.width / numDays);
   };
   _getAttr_height(path, obj) {
     var yLabel = obj.yLabel;
@@ -200,10 +201,9 @@ class Bargraph extends Base_D3 {
    *
    * @param  {array} rawData an array of json objects with a common key
    */
-  plot(data) {
-    console.log(data)
+  plot(rawData) {
 
-    console.log(this.getMap(this, data))
+    var data = this.getMap(this, rawData)
 
     this.canvas.selectAll("rect.bar")
       .data(data)
