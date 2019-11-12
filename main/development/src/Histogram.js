@@ -84,6 +84,46 @@ class Histogram extends Base_D3 {
 
 
 
+  _getAttr_x(path, obj) {
+    var widthScale = obj.getWidthScale(path.data());
+
+    path.attr("x", function(d) {
+      return widthScale(d.x0);
+    });
+  };
+  _getAttr_y(path, obj) {
+    var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("y", function(d) {
+      return heightScale(d.length);
+    });
+  };
+  _getAttr_width(path, obj) {
+    var widthScale = obj.getWidthScale(path.data());
+    var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("width", function(d) {
+      var db = path.data();
+      return widthScale(db[0].x1) - widthScale(db[0].x0) - 1;
+    });
+  };
+  _getAttr_height(path, obj) {
+    var heightScale = obj.getHeightScale(path.data());
+
+    path.attr("height", function(d) {
+      return obj.height - heightScale(d.length);
+    });
+  };
+  _getAttr_xText(path, obj) {
+    var widthScale = obj.getWidthScale(path.data());
+
+    path.attr("x", function(d) {
+      var db = path.data();
+      return (widthScale(db[0].x1) - widthScale(db[0].x0)) / 2;
+    });
+  };
+
+
   /**
   * Constructor for reused attributes for d3 elements. All updates to common
   * atrributes are stored in this single function for rapid updating
@@ -94,38 +134,22 @@ class Histogram extends Base_D3 {
   *
   */
   getAttr(path, obj, attributes) {
-    //flatten data with d3.merge
-    var widthScale = obj.getWidthScale(path.data());
-    var heightScale = obj.getHeightScale(path.data());
-
     for (var key in attributes) {
       switch (attributes[key]) {
         case "x":
-          path.attr("x", function(d) {
-            return widthScale(d.x0);
-          });
+          obj._getAttr_x(path, obj);
           break;
         case "y":
-          path.attr("y", function(d) {
-            return heightScale(d.length);
-          });
+          obj._getAttr_y(path, obj);
           break;
         case "width":
-          path.attr("width", function(d) {
-            var db = path.data();
-            return widthScale(db[0].x1) - widthScale(db[0].x0) - 1;
-          });
+          obj._getAttr_width(path, obj);
           break;
         case "height":
-          path.attr("height", function(d) {
-            return obj.height - heightScale(d.length);
-          });
+          obj._getAttr_height(path, obj);
           break;
         case "xText":
-          path.attr("x", function(d) {
-            var db = path.data();
-            return (widthScale(db[0].x1) - widthScale(db[0].x0)) / 2;
-          });
+          obj._getAttr_xText(path, obj);
           break;
       };
     };
