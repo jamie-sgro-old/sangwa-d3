@@ -10,9 +10,9 @@ class Histogram_Date extends Histogram {
   constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour, binNum);
 
-    var _date = new _Date;
+    this._date = new _Date;
 
-    this.getWidthScale = _date.getWidthScale;
-    this.parseRawData = _date.parseRawData_one;
+    this.getWidthScale = this._date.getWidthScale;
+    this.parseRawData = this._date.parseRawData_one;
   };
 }; // End Class
