@@ -13,6 +13,7 @@ class Bargraph extends Base_D3 {
     this.max = 0;
     this.min = 0;
     this.widthScale = function() {};
+    this.heightScale = function() {};
   };
 
 
@@ -103,12 +104,10 @@ class Bargraph extends Base_D3 {
     });
   };
   _getAttr_y(path, obj) {
-    var heightScale = obj.getHeightScale(path.data());
-
     path.attr("y", function(d) {
       var yLabel = obj.yLabel;
 
-      return heightScale(d[yLabel]);
+      return obj.heightScale(d[yLabel]);
     });
   };
   _getAttr_width(path, obj) {
@@ -124,10 +123,8 @@ class Bargraph extends Base_D3 {
   _getAttr_height(path, obj) {
     var yLabel = obj.yLabel;
 
-    var heightScale = obj.getHeightScale(path.data());
-
     path.attr("height", function(d) {
-      return obj.height - heightScale(d[yLabel]);
+      return obj.height - obj.heightScale(d[yLabel]);
     })
   };
   _getAttr_fill(path, obj) {
@@ -153,14 +150,12 @@ class Bargraph extends Base_D3 {
     });
   };
   _getAttr_cy(path, obj) {
-    var heightScale = obj.getHeightScale(path.data());
-
     path.attr("cy", function(d) {
-      return heightScale(d.name);
+      return obj.heightScale(d.name);
     });
   };
   _getAttr_r(path, obj) {
-    path.attr("r", heightScale.bandwidth()/2);
+    path.attr("r", obj.heightScale.bandwidth()/2);
   };
 
 
@@ -200,6 +195,7 @@ class Bargraph extends Base_D3 {
     this.domain[1] = d3.timeDay.offset(this.domain[1], 1);
 
     this.widthScale = this.getWidthScale(this.domain);
+    this.heightScale = this.getHeightScale(data);
 
     return(data);
   };
