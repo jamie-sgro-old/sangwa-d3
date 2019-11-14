@@ -131,6 +131,13 @@ class Histogram extends Base_D3 {
 
 
 
+  postPlot() {
+    this.canvas.selectAll("rect.bar")
+      .attr("transform", "translate(" + 1 + "," + 0 + ")");
+  };
+
+
+
   /**
    * plot - Instantiate the visualization based on the data provided
    *
@@ -146,7 +153,7 @@ class Histogram extends Base_D3 {
       .append("rect")
         .attr("class", "bar")
         .call(this.getAttr, this, ["x", "y", "width", "height", "fill"])
-        .attr("transform", "translate(" + 1 + "," + 0 + ")");
+
 
     // add the x Axis
     this.canvas
@@ -159,5 +166,7 @@ class Histogram extends Base_D3 {
       .append("g")
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
+
+    this.postPlot();
   };
 }; // End Class
