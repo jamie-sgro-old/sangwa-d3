@@ -6,5 +6,6 @@ define(function (require) {
     require("./Histogram_Int.js");
     require("./Histogram_Date.js");
     require("./Bargraph.js");
+    require("./Bargraph_Date.js");
     require("./test.js");
 });
