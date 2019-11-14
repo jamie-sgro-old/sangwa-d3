@@ -185,6 +185,14 @@ class Bargraph extends Base_D3 {
 
 
 
+  getDomain(data) {
+    var min = d3.min(data);
+    var max = d3.max(data);
+    return([min, max]);
+  };
+
+
+
   /**
    * plot - Instantiate the visualization based on the data provided
    *
@@ -200,12 +208,10 @@ class Bargraph extends Base_D3 {
         return x[xLabel];
     });
 
-    this.min = d3.min(flattenX);
-    this.max = d3.max(flattenX);
-    // add a single day since x axis ends at begining of max day
-    this.max = d3.timeDay.offset(this.max, 1);
+    this.domain = this.getDomain(flattenX);
 
-    this.domain = [this.min, this.max];
+    // add a single day since x axis ends at begining of max day
+    this.domain[1] = d3.timeDay.offset(this.domain[1], 1);
 
     this.widthScale = this.getWidthScale(this.domain);
 
