@@ -91,6 +91,20 @@ class Histogram extends Base_D3 {
 
 
 
+  prePlot(rawData) {
+    var map = this.parseRawData(this, rawData);
+
+    this.domain = this.getDomain(map);
+
+    this.widthScale = this.getWidthScale(this.domain);
+
+    var data = this.getBins(this, map);
+
+    return(data);
+  };
+
+
+
   /**
    * plot - Instantiate the visualization based on the data provided
    *
@@ -98,13 +112,7 @@ class Histogram extends Base_D3 {
    */
   plot(rawData) {
 
-    var map = this.parseRawData(this, rawData);
-
-    this.domain = this.getDomain(map);
-
-    this.widthScale = this.getWidthScale(this.domain)
-
-    var data = this.getBins(this, map);
+    var data = this.prePlot(rawData);
 
     this.canvas.selectAll("rect.bar")
       .data(data)

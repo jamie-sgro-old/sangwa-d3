@@ -65,6 +65,9 @@ class Base_D3 {
     return([min, max]);
   };
 
+  /** Polymorphism */
+  prePlot() {};
+
 
 
   /**

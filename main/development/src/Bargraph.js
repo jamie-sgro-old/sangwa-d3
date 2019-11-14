@@ -185,13 +185,7 @@ class Bargraph extends Base_D3 {
 
 
 
-  /**
-   * plot - Instantiate the visualization based on the data provided
-   *
-   * @param  {array} rawData an array of json objects with a common key
-   */
-  plot(rawData) {
-
+  prePlot(rawData) {
     var data = this.parseRawData(this, rawData);
 
     var xLabel = this.xLabel;
@@ -206,6 +200,20 @@ class Bargraph extends Base_D3 {
     this.domain[1] = d3.timeDay.offset(this.domain[1], 1);
 
     this.widthScale = this.getWidthScale(this.domain);
+
+    return(data);
+  };
+
+
+
+  /**
+   * plot - Instantiate the visualization based on the data provided
+   *
+   * @param  {array} rawData an array of json objects with a common key
+   */
+  plot(rawData) {
+
+    var data = this.prePlot(rawData);
 
     this.canvas.selectAll("rect.bar")
       .data(data)
