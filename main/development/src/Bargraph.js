@@ -209,37 +209,4 @@ class Bargraph extends Base_D3 {
   postPlot() {
 
   };
-
-
-
-  /**
-   * plot - Instantiate the visualization based on the data provided
-   *
-   * @param  {array} rawData an array of json objects with a common key
-   */
-  plot(rawData) {
-
-    var data = this.prePlot(rawData);
-
-    this.canvas.selectAll("rect.bar")
-      .data(data)
-      .enter()
-      .append("rect")
-        .attr("class", "bar")
-        .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
-
-    // add the x Axis
-    this.canvas
-      .append("g")
-        .attr("class", "x axis")
-        .call(this.getXAxis, this);
-
-    // add the y Axis
-    this.canvas
-      .append("g")
-        .attr("class", "y axis")
-        .call(this.getYAxis, this, data);
-
-    this.postPlot();
-  };
 };
