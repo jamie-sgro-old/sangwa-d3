@@ -81,10 +81,10 @@ class Base_D3 {
   * @param   {obj} obj - the class element typically evoked though 'this.'
   * @param   {obj} data - reference to the data from d3 object calling the function
   */
-  getXAxis(path, obj, data) {
+  getXAxis(path, obj) {
     path
       .attr("transform", "translate(0," + obj.height + ")")
-      .call(d3.axisBottom(obj.getWidthScale(data)));
+      .call(d3.axisBottom(obj.getWidthScale(obj.min, obj.max)));
   };
 
 

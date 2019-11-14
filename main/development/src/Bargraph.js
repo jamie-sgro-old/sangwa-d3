@@ -231,7 +231,7 @@ class Bargraph extends Base_D3 {
     this.canvas
       .append("g")
         .attr("class", "x axis")
-        .call(this.getXAxis, this, data);
+        .call(this.getXAxis, this);
 
 
     // add the y Axis
