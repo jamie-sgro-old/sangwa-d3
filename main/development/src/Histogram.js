@@ -8,6 +8,11 @@ class Histogram extends Base_D3 {
 
     this.binNum = binNum;
     this.yLabel = "value";
+
+    //init as empty to be modified when data is provided
+    this.max = 0;
+    this.min = 0;
+    this.widthScale = function() {};
   };
 
 
@@ -30,7 +35,7 @@ class Histogram extends Base_D3 {
 
 
   /** Polymorphism */
-  getWidthScale(map) {};
+  getWidthScale() {};
 
 
 
@@ -45,21 +50,17 @@ class Histogram extends Base_D3 {
    * @return {obj}      returns d3.histogram datastructure
    */
   getBins(obj, data) {
-    var widthScale = obj.getWidthScale(data);
-
     return d3.histogram()
-      .domain(widthScale.domain())
-      .thresholds(widthScale.ticks(obj.binNum))
+      .domain(obj.widthScale.domain())
+      .thresholds(obj.widthScale.ticks(obj.binNum))
       (data);
   };
 
 
 
   _getAttr_x(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-
     path.attr("x", function(d) {
-      return widthScale(d.x0);
+      return obj.widthScale(d.x0);
     });
   };
   _getAttr_y(path, obj) {
@@ -70,12 +71,9 @@ class Histogram extends Base_D3 {
     });
   };
   _getAttr_width(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-    var heightScale = obj.getHeightScale(path.data());
-
     path.attr("width", function(d) {
       var db = path.data();
-      return widthScale(db[0].x1) - widthScale(db[0].x0) - 1;
+      return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
     });
   };
   _getAttr_height(path, obj) {
@@ -102,10 +100,10 @@ class Histogram extends Base_D3 {
 
     var map = this.getMap(this, rawData);
 
-    this.max = d3.max(map);
     this.min = d3.min(map);
-    //the widthScale data should be declared here with the data formatted as
-    //  map and considered constant
+    this.max = d3.max(map);
+
+    this.widthScale = this.getWidthScale(this.min, this.max)
 
     var data = this.getBins(this, map);
 
@@ -122,7 +120,7 @@ class Histogram extends Base_D3 {
     this.canvas
       .append("g")
         .attr("class", "x axis")
-        .call(this.getXAxis, this, data);
+        .call(this.getXAxis, this);
 
     // add the y Axis
     this.canvas
