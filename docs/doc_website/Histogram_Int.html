@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="saD3.js.html">saD3.js</a>, <a href="saD3.js.html#line252">line 252</a>
+        <a href="saD3.js.html">saD3.js</a>, <a href="saD3.js.html#line306">line 306</a>
     </li></ul></dd>
     
 
@@ -142,165 +142,6 @@
 
     
         <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getMap"><span class="type-signature"></span>getMap<span class="signature">(rawData)</span><span class="type-signature"> &rarr; {array}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    getMap - pre clean raw data in the form of an integer to float messy integers
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>rawData</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">an array of json objects</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="saD3.js.html">saD3.js</a>, <a href="saD3.js.html#line280">line 280</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    an array of parsed json objects according to parseFloat()
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
 
         
             
@@ -409,7 +250,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="saD3.js.html">saD3.js</a>, <a href="saD3.js.html#line266">line 266</a>
+        <a href="saD3.js.html">saD3.js</a>, <a href="saD3.js.html#line320">line 320</a>
     </li></ul></dd>
     
 
@@ -440,6 +281,165 @@
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="parseRawData"><span class="type-signature"></span>parseRawData<span class="signature">(rawData)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    parseRawData - pre clean raw data in the form of an integer to float messy integersi.e. turns [{value: "5"},{value: "1"},{value: "35"}] into [5,1,35]
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>rawData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an array of json objects</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="saD3.js.html">saD3.js</a>, <a href="saD3.js.html#line337">line 337</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    an array of parsed json objects according to parseFloat()
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -455,13 +455,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base_D3.html">Base_D3</a></li><li><a href="Histogram.html">Histogram</a></li><li><a href="Histogram_Date.html">Histogram_Date</a></li><li><a href="Histogram_Int.html">Histogram_Int</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bargraph.html">Bargraph</a></li><li><a href="Base_D3.html">Base_D3</a></li><li><a href="Histogram.html">Histogram</a></li><li><a href="Histogram_Date.html">Histogram_Date</a></li><li><a href="Histogram_Int.html">Histogram_Int</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 05 2019 12:13:44 GMT+0100 (W. Europe Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Nov 14 2019 12:06:05 GMT+0100 (W. Europe Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
