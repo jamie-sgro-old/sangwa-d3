@@ -1,6 +1,5 @@
 /**
  * BarGraph - creates a series of bars (rectangles) based on x and y data
- * @DEPRECATED
  */
 class Bargraph extends Base_D3 {
   /** @constructor */
@@ -8,6 +7,13 @@ class Bargraph extends Base_D3 {
     super(width, height, margin, colour);
 
     this.xLabel = "start_date";
+    this.yLabel = "value";
+
+    //init as empty to be modified when data is provided
+    this.max = 0;
+    this.min = 0;
+    this.widthScale = function() {};
+    this.heightScale = function() {};
   };
 
 
@@ -19,9 +25,10 @@ class Bargraph extends Base_D3 {
    * @return {obj}      a linear scale as a hexidecimal or rgb
    */
   getColour(data) {
+    var yLabel = this.yLabel;
     return d3.scaleLinear()
       .domain([0, d3.max(data, function(d) {
-        return d.value;
+        return d[yLabel];
       })])
       .range([this.colourBottom, this.colourTop]);
   };
@@ -38,11 +45,12 @@ class Bargraph extends Base_D3 {
   *
   */
   getHeightScale(data) {
+    var yLabel = this.yLabel;
     return d3.scaleLinear()
       .domain([0, d3.max(data, function(d) {
-        return d.value;
+        return d[yLabel];
       })])
-      .range([0, this.height]);
+      .range([this.height, 0]);
   };
 
 
@@ -70,13 +78,11 @@ class Bargraph extends Base_D3 {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(data) {
-    var xLabel = this.xLabel;
+  getWidthScale(domain) {
     return d3.scaleTime()
-      .domain(d3.extent(data, function(d) {
-        return new Date(d[xLabel]);
-      }))
-      .range([0, this.width]);
+      .domain(domain)
+      .range([0, this.width])
+      .nice();
   };
 
 
@@ -92,126 +98,111 @@ class Bargraph extends Base_D3 {
 
 
 
-  /**
-  * getXAxis - create an x axis on left within the g element
-  *
-  * @param   {obj} path - reference to the d3 object calling the function
-  * @param   {obj} obj - the class element typically evoked though 'this.'
-  * @param   {obj} data - reference to the data from d3 object calling the function
-  */
-  getXAxis(path, obj, data) {
-    path
-      //.attr("transform", "translate(0," + obj.height + ")")
-      .call(d3.axisTop(obj.getWidthScale(data)));
-  }
+  _getAttr_x(path, obj) {
+    path.attr("x", function(d) {
+      return obj.widthScale(d[obj.xLabel]);
+    });
+  };
+  _getAttr_y(path, obj) {
+    path.attr("y", function(d) {
+      var yLabel = obj.yLabel;
 
+      return obj.heightScale(d[yLabel]);
+    });
+  };
+  _getAttr_width(path, obj) {
+    var flattenX = path.data().map(function(x) {
+        return x[obj.xLabel];
+    });
 
+    var range = d3.extent(flattenX);
+    var numDays = d3.timeDay.count(range[0], range[1]) + 1;
 
-  /**
-  * getYAxis - create a y axis on the top of svg within the g element
-  *
-  * @param   {obj} path - reference to the d3 object calling the function
-  * @param   {obj} obj - the class element typically evoked though 'this.'
-  * @param   {obj} data - reference to the data from d3 object calling the function
-  */
-  getYAxis(path, obj, data) {
-    path
-      .call(d3.axisLeft(obj.getHeightScale(data)));
-  }
+    path.attr("width", obj.width / numDays);
+  };
+  _getAttr_height(path, obj) {
+    var yLabel = obj.yLabel;
 
+    path.attr("height", function(d) {
+      return obj.height - obj.heightScale(d[yLabel]);
+    })
+  };
+  _getAttr_fill(path, obj) {
+    var yLabel = obj.yLabel;
 
-
-  /**
-  * Constructor for reused attributes for d3 elements. All updates to common
-  * atrributes are stored in this single function for rapid updating
-  *
-  * @param {obj} path - reference to the d3 object calling the function
-  * @param {obj} obj - the class element typically evoked though 'this.'
-  * @param {array} attributes - array of strings that match d3 attributes
-  *
-  */
-  getAttr(path, obj, attributes) {
-    var key;
-    var parseTime = d3.timeParse("%Y-%m-%d");
-
-    var widthScale = obj.getWidthScale(path.data());
-    var heightScale = obj.getHeightScale(path.data());
     var colour = obj.getColour(path.data());
 
-    for (key in attributes) {
-      switch (attributes[key]) {
-        case "x":
-          path.attr("x", function(d) {
-            return widthScale(parseTime(d[obj.xLabel]));
-          });
-          break;
-        case "height":
-          path.attr("height", function(d) {
-            return heightScale(d.value);
-          })
-          break;
-        case "fill":
-          path.attr("fill", function(d) {
-            return colour(d.value)
-          })
-          break;
-        case "fillTransparent":
-          path.attr("fill", function(d) {
-            rtn = colour(d.value);
-            return setAlpha(rtn, 0);
-          })
-          break;
-        case "y":
-          path.attr("y", function(d) {
-            return heightScale(d.name);
-          })
-          break;
-        case "cx":
-          path.attr("cx", function(d) {
-            return widthScale(d.value);
-          });
-          break;
-        case "cy":
-          path.attr("cy", function(d) {
-            return heightScale(d.name);
-          })
-          break;
-        case "r":
-          path.attr("r", heightScale.bandwidth()/2)
-          break;
-      };
-    };
+    path.attr("fill", function(d) {
+      return colour(d[yLabel]);
+    });
+  };
+  _getAttr_fillTransparent(path, obj) {
+    var colour = obj.getColour(path.data());
+
+    path.attr("fill", function(d) {
+      rtn = colour(d[yLabel]);
+      return setAlpha(rtn, 0);
+    });
+  };
+  _getAttr_cx(path, obj) {
+    path.attr("cx", function(d) {
+      return obj.widthScale(d[yLabel]);
+    });
+  };
+  _getAttr_cy(path, obj) {
+    path.attr("cy", function(d) {
+      return obj.heightScale(d.name);
+    });
+  };
+  _getAttr_r(path, obj) {
+    path.attr("r", obj.heightScale.bandwidth()/2);
   };
 
 
 
   /**
-   * plot - Instantiate the visualization based on the data provided
+   * parseRawData - pre clean raw data in the form of a string that matches the date
+   * string provided
    *
-   * @param  {array} rawData an array of json objects with a common key
+   * @param  {array} rawData an array of json objects
+   * @return {array}         an array of parsed json objects according to
+   *  d3.timeParse
    */
-  plot(data) {
-    this.canvas.selectAll("rect.bar")
-      .data(data)
-      .enter()
-      .append("rect")
-          .attr("class", "bar")
-          .attr("width", 60)
-          .attr("width", 3)
-          .call(this.getAttr, this, ["x", "height", "fill"])
-          .attr("y", 0)
-
-    // add the x Axis
-    this.canvas
-      .append("g")
-        .attr("class", "x axis")
-        .call(this.getXAxis, this, data);
-
-
-    // add the y Axis
-    this.canvas
-      .append("g")
-        .attr("class", "y axis")
-        .call(this.getYAxis, this, data);
+  parseRawData(obj, rawData) {
+    var parseTime = d3.timeParse("%Y-%m-%d");
+    return rawData.map(function(d, i) {
+      return {
+        [obj.xLabel]: parseTime(d[obj.xLabel]),
+        [obj.yLabel]: d[obj.yLabel]
+      };
+    });
   };
-}
+
+
+
+  prePlot(rawData) {
+    var data = this.parseRawData(this, rawData);
+
+    var xLabel = this.xLabel;
+
+    var flattenX = data.map(function(x) {
+        return x[xLabel];
+    });
+
+    this.domain = this.getDomain(flattenX);
+
+    // add a single day since x axis ends at begining of max day
+    this.domain[1] = d3.timeDay.offset(this.domain[1], 1);
+
+    this.widthScale = this.getWidthScale(this.domain);
+    this.heightScale = this.getHeightScale(data);
+
+    return(data);
+  };
+
+
+
+  postPlot() {
+
+  };
+};
