@@ -77,9 +77,9 @@ class Bargraph extends Base_D3 {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(min, max) {
+  getWidthScale(domain) {
     return d3.scaleTime()
-      .domain([min, max])
+      .domain(domain)
       .range([0, this.width])
       .nice();
   };
@@ -165,24 +165,15 @@ class Bargraph extends Base_D3 {
 
 
 
-  getMapOld(obj, rawData) {
-    var parseTime = d3.timeParse("%Y-%m-%d");
-    return rawData.map(function(d, i) {
-      return parseTime(d[obj.xLabel]);
-    });
-  };
-
-
-
   /**
-   * getMap - pre clean raw data in the form of a string that matches the date
+   * parseRawData - pre clean raw data in the form of a string that matches the date
    * string provided
    *
    * @param  {array} rawData an array of json objects
    * @return {array}         an array of parsed json objects according to
    *  d3.timeParse
    */
-  getMap(obj, rawData) {
+  parseRawData(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
       return {
@@ -194,14 +185,8 @@ class Bargraph extends Base_D3 {
 
 
 
-  /**
-   * plot - Instantiate the visualization based on the data provided
-   *
-   * @param  {array} rawData an array of json objects with a common key
-   */
-  plot(rawData) {
-
-    var data = this.getMap(this, rawData);
+  prePlot(rawData) {
+    var data = this.parseRawData(this, rawData);
 
     var xLabel = this.xLabel;
 
@@ -209,31 +194,19 @@ class Bargraph extends Base_D3 {
         return x[xLabel];
     });
 
-    this.min = d3.min(flattenX);
-    this.max = d3.max(flattenX);
+    this.domain = this.getDomain(flattenX);
+
     // add a single day since x axis ends at begining of max day
-    this.max = d3.timeDay.offset(this.max, 1)
+    this.domain[1] = d3.timeDay.offset(this.domain[1], 1);
 
-    this.widthScale = this.getWidthScale(this.min, this.max);
+    this.widthScale = this.getWidthScale(this.domain);
 
-    this.canvas.selectAll("rect.bar")
-      .data(data)
-      .enter()
-      .append("rect")
-          .attr("class", "bar")
-          .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
-
-    // add the x Axis
-    this.canvas
-      .append("g")
-        .attr("class", "x axis")
-        .call(this.getXAxis, this);
+    return(data);
+  };
 
 
-    // add the y Axis
-    this.canvas
-      .append("g")
-        .attr("class", "y axis")
-        .call(this.getYAxis, this, data);
+
+  postPlot() {
+
   };
 };

@@ -21,9 +21,9 @@ class Histogram_Date extends Histogram {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(min, max) {
+  getWidthScale(domain) {
     return d3.scaleTime()
-      .domain([min, max])
+      .domain(domain)
       .rangeRound([0, this.width])
       .nice();
   };
@@ -31,14 +31,14 @@ class Histogram_Date extends Histogram {
 
 
   /**
-   * getMap - pre clean raw data in the form of a string that matches the date
+   * parseRawData - pre clean raw data in the form of a string that matches the date
    * string provided
    *
    * @param  {array} rawData an array of json objects
    * @return {array}         an array of parsed json objects according to
    *  d3.timeParse
    */
-  getMap(obj, rawData) {
+  parseRawData(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
       return parseTime(d[obj.yLabel]);

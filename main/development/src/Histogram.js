@@ -16,6 +16,23 @@ class Histogram extends Base_D3 {
   };
 
 
+
+  /**
+   * getColour - map integer value along a range between two or more colours
+   *
+   * @param  {array} data value in question to be mapped
+   * @return {obj}      a linear scale as a hexidecimal or rgb
+   */
+  getColour(data) {
+    var yLabel = this.yLabel;
+    return d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) {
+        return d.length;
+      })])
+      .range([this.colourBottom, this.colourTop]);
+  };
+
+
   /**
   * Map integers of any range to a particular pixel point on an svg element
   *
@@ -83,49 +100,39 @@ class Histogram extends Base_D3 {
       return obj.height - heightScale(d.length);
     });
   };
+  _getAttr_fill(path, obj) {
+    var yLabel = obj.yLabel;
+
+    var colour = obj.getColour(path.data());
+
+    path.attr("fill", function(d) {
+      return colour(d.length);
+    });
+  };
 
 
 
   /** Polymorphism */
-  getMap(rawData) {};
+  parseRawData(rawData) {};
 
 
 
-  /**
-   * plot - Instantiate the visualization based on the data provided
-   *
-   * @param  {array} rawData an array of json objects with a common key
-   */
-  plot(rawData) {
+  prePlot(rawData) {
+    var map = this.parseRawData(this, rawData);
 
-    var map = this.getMap(this, rawData);
+    this.domain = this.getDomain(map);
 
-    this.min = d3.min(map);
-    this.max = d3.max(map);
-
-    this.widthScale = this.getWidthScale(this.min, this.max)
+    this.widthScale = this.getWidthScale(this.domain);
 
     var data = this.getBins(this, map);
 
+    return(data);
+  };
+
+
+
+  postPlot() {
     this.canvas.selectAll("rect.bar")
-      .data(data)
-      .enter()
-      .append("rect")
-        .attr("class", "bar")
-        .call(this.getAttr, this, ["x", "y", "width", "height"])
-        .attr("transform", "translate(" + 1 + "," + 0 + ")")
-        .attr("fill", "steelblue");
-
-    // add the x Axis
-    this.canvas
-      .append("g")
-        .attr("class", "x axis")
-        .call(this.getXAxis, this);
-
-    // add the y Axis
-    this.canvas
-      .append("g")
-        .attr("class", "y axis")
-        .call(this.getYAxis, this, data);
+      .attr("transform", "translate(" + 1 + "," + 0 + ")");
   };
 }; // End Class

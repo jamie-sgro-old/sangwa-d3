@@ -20,16 +20,16 @@ class Histogram_Int extends Histogram {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(min, max) {
+  getWidthScale(domain) {
     return d3.scaleLinear()
-      .domain([0, max])
+      .domain([0, domain[1]])
       .rangeRound([0, this.width])
       .nice();
   };
 
 
   /**
-   * getMap - pre clean raw data in the form of an integer to float messy integers
+   * parseRawData - pre clean raw data in the form of an integer to float messy integers
    *
    * i.e. turns [{value: "5"},{value: "1"},{value: "35"}] into [5,1,35]
    *
@@ -37,7 +37,7 @@ class Histogram_Int extends Histogram {
    * @return {array}         an array of parsed json objects according to
    *  parseFloat()
    */
-  getMap(obj, rawData) {
+  parseRawData(obj, rawData) {
     return rawData.map(function(d, i) {
       return parseFloat(d[obj.yLabel]);
     });

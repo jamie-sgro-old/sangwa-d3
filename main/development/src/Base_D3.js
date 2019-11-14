@@ -52,6 +52,25 @@ class Base_D3 {
 
 
   /**
+   * getDomain - take data parsed to match cuper class datatype (date, int, etc)
+   * return array of min and max values in the data
+   *
+   * @param  {array} data array of a unidimensional data structure (i.e. only)
+   *    the x axis
+   * @return {array}      min and max values in the form: [min, max]
+   */
+  getDomain(data) {
+    var min = d3.min(data);
+    var max = d3.max(data);
+    return([min, max]);
+  };
+
+  /** Polymorphism */
+  prePlot() {};
+
+
+
+  /**
   * Constructor for reused attributes for d3 elements. All updates to common
   * atrributes are stored in this single function for rapid updating
   *
@@ -84,7 +103,7 @@ class Base_D3 {
   getXAxis(path, obj) {
     path
       .attr("transform", "translate(0," + obj.height + ")")
-      .call(d3.axisBottom(obj.getWidthScale(obj.min, obj.max)));
+      .call(d3.axisBottom(obj.getWidthScale(obj.domain)));
   };
 
 
@@ -99,5 +118,38 @@ class Base_D3 {
   getYAxis(path, obj, data) {
     path
       .call(d3.axisLeft(obj.getHeightScale(data)));
+  };
+
+
+
+  /**
+   * plot - Instantiate the visualization based on the data provided
+   *
+   * @param  {array} rawData an array of json objects with a common key
+   */
+  plot(rawData) {
+
+    var data = this.prePlot(rawData);
+
+    this.canvas.selectAll("rect.bar")
+      .data(data)
+      .enter()
+      .append("rect")
+        .attr("class", "bar")
+        .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
+
+    // add the x Axis
+    this.canvas
+      .append("g")
+        .attr("class", "x axis")
+        .call(this.getXAxis, this);
+
+    // add the y Axis
+    this.canvas
+      .append("g")
+        .attr("class", "y axis")
+        .call(this.getYAxis, this, data);
+
+    this.postPlot();
   };
 }; // End Class
