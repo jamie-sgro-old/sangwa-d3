@@ -84,7 +84,7 @@ class Base_D3 {
   getXAxis(path, obj) {
     path
       .attr("transform", "translate(0," + obj.height + ")")
-      .call(d3.axisBottom(obj.getWidthScale(obj.min, obj.max)));
+      .call(d3.axisBottom(obj.getWidthScale(obj.domain)));
   };
 
 

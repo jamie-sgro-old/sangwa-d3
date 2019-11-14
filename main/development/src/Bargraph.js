@@ -77,9 +77,9 @@ class Bargraph extends Base_D3 {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(min, max) {
+  getWidthScale(domain) {
     return d3.scaleTime()
-      .domain([min, max])
+      .domain(domain)
       .range([0, this.width])
       .nice();
   };
@@ -203,9 +203,11 @@ class Bargraph extends Base_D3 {
     this.min = d3.min(flattenX);
     this.max = d3.max(flattenX);
     // add a single day since x axis ends at begining of max day
-    this.max = d3.timeDay.offset(this.max, 1)
+    this.max = d3.timeDay.offset(this.max, 1);
 
-    this.widthScale = this.getWidthScale(this.min, this.max);
+    this.domain = [this.min, this.max];
+
+    this.widthScale = this.getWidthScale(this.domain);
 
     this.canvas.selectAll("rect.bar")
       .data(data)
