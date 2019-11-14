@@ -100,10 +100,7 @@ class Histogram extends Base_D3 {
 
     var map = this.parseRawData(this, rawData);
 
-    this.min = d3.min(map);
-    this.max = d3.max(map);
-
-    this.domain = [this.min, this.max];
+    this.domain = this.getDomain(map);
 
     this.widthScale = this.getWidthScale(this.domain)
 
