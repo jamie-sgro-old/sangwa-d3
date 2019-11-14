@@ -152,8 +152,7 @@ class Histogram extends Base_D3 {
       .enter()
       .append("rect")
         .attr("class", "bar")
-        .call(this.getAttr, this, ["x", "y", "width", "height", "fill"])
-
+        .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
 
     // add the x Axis
     this.canvas
