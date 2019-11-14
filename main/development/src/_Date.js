@@ -8,7 +8,7 @@
 class _Date {
   /** @constructor */
   constructor() {
-
+    this.parseTime = d3.timeParse("%Y-%m-%d");
   };
 
 
@@ -39,9 +39,27 @@ class _Date {
    *  d3.timeParse
    */
   parseRawData_one(obj, rawData) {
-    var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
-      return parseTime(d[obj.yLabel]);
+      return obj._date.parseTime(d[obj.yLabel]);
+    });
+  };
+
+
+
+  /**
+   * parseRawData - pre clean raw data in the form of a string that matches the date
+   * string provided
+   *
+   * @param  {array} rawData an array of json objects
+   * @return {array}         an array of parsed json objects according to
+   *  d3.timeParse
+   */
+  parseRawData_two(obj, rawData) {
+    return rawData.map(function(d, i) {
+      return {
+        [obj.xLabel]: obj._date.parseTime(d[obj.xLabel]),
+        [obj.yLabel]: d[obj.yLabel]
+      };
     });
   };
 }; // End Class
