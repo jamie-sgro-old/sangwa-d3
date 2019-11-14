@@ -31,8 +31,8 @@ class _Date {
 
 
   /**
-   * parseRawData - pre clean raw data in the form of a string that matches the date
-   * string provided
+   * parseRawData - pre clean raw data in the form of a string that matches the
+   *  date string inherited from class
    *
    * @param  {array} rawData an array of json objects
    * @return {array}         an array of parsed json objects according to
@@ -47,8 +47,8 @@ class _Date {
 
 
   /**
-   * parseRawData - pre clean raw data in the form of a string that matches the date
-   * string provided
+   * parseRawData - pre clean raw data in the form of a string that matches the
+   *  date string inherited from class
    *
    * @param  {array} rawData an array of json objects
    * @return {array}         an array of parsed json objects according to
