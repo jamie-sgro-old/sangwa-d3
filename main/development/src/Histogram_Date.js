@@ -13,22 +13,6 @@ class Histogram_Date extends Histogram {
     var _date = new _Date;
 
     this.getWidthScale = _date.getWidthScale;
-  };
-
-
-
-  /**
-   * parseRawData - pre clean raw data in the form of a string that matches the date
-   * string provided
-   *
-   * @param  {array} rawData an array of json objects
-   * @return {array}         an array of parsed json objects according to
-   *  d3.timeParse
-   */
-  parseRawData(obj, rawData) {
-    var parseTime = d3.timeParse("%Y-%m-%d");
-    return rawData.map(function(d, i) {
-      return parseTime(d[obj.yLabel]);
-    });
+    this.parseRawData = _date.parseRawData_one;
   };
 }; // End Class

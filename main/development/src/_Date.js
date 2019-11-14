@@ -8,7 +8,7 @@
 class _Date {
   /** @constructor */
   constructor() {
-    
+
   };
 
 
@@ -38,7 +38,7 @@ class _Date {
    * @return {array}         an array of parsed json objects according to
    *  d3.timeParse
    */
-  parseRawData(obj, rawData) {
+  parseRawData_one(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
       return parseTime(d[obj.yLabel]);
