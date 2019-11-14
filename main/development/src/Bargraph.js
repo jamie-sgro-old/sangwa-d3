@@ -78,14 +78,8 @@ class Bargraph extends Base_D3 {
   *
   */
   getWidthScale(min, max) {
-    //var xLabel = this.xLabel;
     return d3.scaleTime()
       .domain([min, max])
-      /*
-      .domain(d3.extent(data, function(d) {
-        return new Date(d[xLabel]);
-      }))
-      */
       .range([0, this.width])
       .nice();
   };
