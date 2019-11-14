@@ -166,14 +166,14 @@ class Bargraph extends Base_D3 {
 
 
   /**
-   * getMap - pre clean raw data in the form of a string that matches the date
+   * parseRawData - pre clean raw data in the form of a string that matches the date
    * string provided
    *
    * @param  {array} rawData an array of json objects
    * @return {array}         an array of parsed json objects according to
    *  d3.timeParse
    */
-  getMap(obj, rawData) {
+  parseRawData(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
       return {
@@ -192,7 +192,7 @@ class Bargraph extends Base_D3 {
    */
   plot(rawData) {
 
-    var data = this.getMap(this, rawData);
+    var data = this.parseRawData(this, rawData);
 
     var xLabel = this.xLabel;
 

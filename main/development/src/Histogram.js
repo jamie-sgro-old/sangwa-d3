@@ -87,7 +87,7 @@ class Histogram extends Base_D3 {
 
 
   /** Polymorphism */
-  getMap(rawData) {};
+  parseRawData(rawData) {};
 
 
 
@@ -98,7 +98,7 @@ class Histogram extends Base_D3 {
    */
   plot(rawData) {
 
-    var map = this.getMap(this, rawData);
+    var map = this.parseRawData(this, rawData);
 
     this.min = d3.min(map);
     this.max = d3.max(map);
