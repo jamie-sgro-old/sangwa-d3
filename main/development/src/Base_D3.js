@@ -52,6 +52,22 @@ class Base_D3 {
 
 
   /**
+   * getDomain - take data parsed to match cuper class datatype (date, int, etc)
+   * return array of min and max values in the data
+   *
+   * @param  {array} data array of a unidimensional data structure (i.e. only)
+   *    the x axis
+   * @return {array}      min and max values in the form: [min, max]
+   */
+  getDomain(data) {
+    var min = d3.min(data);
+    var max = d3.max(data);
+    return([min, max]);
+  };
+
+
+
+  /**
   * Constructor for reused attributes for d3 elements. All updates to common
   * atrributes are stored in this single function for rapid updating
   *
