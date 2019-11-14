@@ -165,15 +165,6 @@ class Bargraph extends Base_D3 {
 
 
 
-  getMapOld(obj, rawData) {
-    var parseTime = d3.timeParse("%Y-%m-%d");
-    return rawData.map(function(d, i) {
-      return parseTime(d[obj.xLabel]);
-    });
-  };
-
-
-
   /**
    * getMap - pre clean raw data in the form of a string that matches the date
    * string provided
