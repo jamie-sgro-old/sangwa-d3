@@ -129,7 +129,7 @@ class Histogram extends Base_D3 {
 
 
 
-  postPlot() {
+  postPlot(data) {
     this.canvas.selectAll("rect.bar")
       .attr("transform", "translate(" + 1 + "," + 0 + ")");
   };

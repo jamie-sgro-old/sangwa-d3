@@ -165,7 +165,7 @@ class Base_D3 {
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
 
-    this.postPlot();
+    this.postPlot(data);
   };
 
 
