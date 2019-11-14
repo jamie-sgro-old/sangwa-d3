@@ -20,9 +20,9 @@ class Histogram_Int extends Histogram {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(min, max) {
+  getWidthScale(domain) {
     return d3.scaleLinear()
-      .domain([0, max])
+      .domain([0, domain[1]])
       .rangeRound([0, this.width])
       .nice();
   };
