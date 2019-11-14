@@ -8,6 +8,11 @@ class Bargraph extends Base_D3 {
 
     this.xLabel = "start_date";
     this.yLabel = "value";
+
+    //init as empty to be modified when data is provided
+    this.max = 0;
+    this.min = 0;
+    this.widthScale = function() {};
   };
 
 
@@ -72,12 +77,9 @@ class Bargraph extends Base_D3 {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(data) {
-    var xLabel = this.xLabel;
+  getWidthScale(min, max) {
     return d3.scaleTime()
-      .domain(d3.extent(data, function(d) {
-        return new Date(d[xLabel]);
-      }))
+      .domain([min, max])
       .range([0, this.width])
       .nice();
   };
@@ -96,12 +98,8 @@ class Bargraph extends Base_D3 {
 
 
   _getAttr_x(path, obj) {
-    var parseTime = d3.timeParse("%Y-%m-%d");
-
-    var widthScale = obj.getWidthScale(path.data());
-
     path.attr("x", function(d) {
-      return widthScale(parseTime(d[obj.xLabel]));
+      return obj.widthScale(d[obj.xLabel]);
     });
   };
   _getAttr_y(path, obj) {
@@ -114,11 +112,14 @@ class Bargraph extends Base_D3 {
     });
   };
   _getAttr_width(path, obj) {
-    path.attr("width", function(d, i) {
-      var range = d3.extent(obj.getMap(path.data()));
-      var numDays = d3.timeDay.count(range[0], range[1]) + 1;
-      return obj.width / numDays;
+    var flattenX = path.data().map(function(x) {
+        return x[obj.xLabel];
     });
+
+    var range = d3.extent(flattenX);
+    var numDays = d3.timeDay.count(range[0], range[1]) + 1;
+
+    path.attr("width", obj.width / numDays);
   };
   _getAttr_height(path, obj) {
     var yLabel = obj.yLabel;
@@ -147,10 +148,8 @@ class Bargraph extends Base_D3 {
     });
   };
   _getAttr_cx(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-
     path.attr("cx", function(d) {
-      return widthScale(d[yLabel]);
+      return obj.widthScale(d[yLabel]);
     });
   };
   _getAttr_cy(path, obj) {
@@ -166,6 +165,15 @@ class Bargraph extends Base_D3 {
 
 
 
+  getMapOld(obj, rawData) {
+    var parseTime = d3.timeParse("%Y-%m-%d");
+    return rawData.map(function(d, i) {
+      return parseTime(d[obj.xLabel]);
+    });
+  };
+
+
+
   /**
    * getMap - pre clean raw data in the form of a string that matches the date
    * string provided
@@ -174,11 +182,13 @@ class Bargraph extends Base_D3 {
    * @return {array}         an array of parsed json objects according to
    *  d3.timeParse
    */
-  getMap(rawData) {
-    var xLabel = this.xLabel;
+  getMap(obj, rawData) {
     var parseTime = d3.timeParse("%Y-%m-%d");
     return rawData.map(function(d, i) {
-      return parseTime(d[xLabel]);
+      return {
+        [obj.xLabel]: parseTime(d[obj.xLabel]),
+        [obj.yLabel]: d[obj.yLabel]
+      };
     });
   };
 
@@ -189,7 +199,23 @@ class Bargraph extends Base_D3 {
    *
    * @param  {array} rawData an array of json objects with a common key
    */
-  plot(data) {
+  plot(rawData) {
+
+    var data = this.getMap(this, rawData);
+
+    var xLabel = this.xLabel;
+
+    var flattenX = data.map(function(x) {
+        return x[xLabel];
+    });
+
+    this.min = d3.min(flattenX);
+    this.max = d3.max(flattenX);
+    // add a single day since x axis ends at begining of max day
+    this.max = d3.timeDay.offset(this.max, 1)
+
+    this.widthScale = this.getWidthScale(this.min, this.max);
+
     this.canvas.selectAll("rect.bar")
       .data(data)
       .enter()
@@ -201,7 +227,7 @@ class Bargraph extends Base_D3 {
     this.canvas
       .append("g")
         .attr("class", "x axis")
-        .call(this.getXAxis, this, data);
+        .call(this.getXAxis, this);
 
 
     // add the y Axis
