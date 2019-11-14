@@ -185,14 +185,6 @@ class Bargraph extends Base_D3 {
 
 
 
-  getDomain(data) {
-    var min = d3.min(data);
-    var max = d3.max(data);
-    return([min, max]);
-  };
-
-
-
   /**
    * plot - Instantiate the visualization based on the data provided
    *
