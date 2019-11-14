@@ -9,23 +9,10 @@ class Histogram_Date extends Histogram {
   /** @constructor */
   constructor(width, height, margin, colour, binNum) {
     super(width, height, margin, colour, binNum);
-  };
 
+    var _date = new _Date;
 
-  /**
-  * Map dates of any range to a particular pixel point on an svg element
-  *
-  * path.data() indicates all the data in an array of JSON objects
-  * d in the function indicates a single datapoint in path.data()
-  *
-  * @param {obj} data - reference to the data from d3 object calling the function
-  *
-  */
-  getWidthScale(domain) {
-    return d3.scaleTime()
-      .domain(domain)
-      .rangeRound([0, this.width])
-      .nice();
+    this.getWidthScale = _date.getWidthScale;
   };
 
 
