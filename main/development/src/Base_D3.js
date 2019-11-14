@@ -194,7 +194,6 @@ class Base_D3 {
    */
   attrTween(path, duration, attr, endRes) {
     var dummy = {};
-    var colour = barplot.getColour();
 
     d3.select(dummy)
       .transition()
