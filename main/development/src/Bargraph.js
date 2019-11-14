@@ -8,6 +8,11 @@ class Bargraph extends Base_D3 {
 
     this.xLabel = "start_date";
     this.yLabel = "value";
+
+    //init as empty to be modified when data is provided
+    this.max = 0;
+    this.min = 0;
+    this.widthScale = function() {};
   };
 
 
@@ -72,12 +77,15 @@ class Bargraph extends Base_D3 {
   * @param {obj} data - reference to the data from d3 object calling the function
   *
   */
-  getWidthScale(data) {
+  getWidthScale(min, max) {
     var xLabel = this.xLabel;
     return d3.scaleTime()
+      .domain([min, max])
+      /*
       .domain(d3.extent(data, function(d) {
         return new Date(d[xLabel]);
       }))
+      */
       .range([0, this.width])
       .nice();
   };
@@ -96,10 +104,8 @@ class Bargraph extends Base_D3 {
 
 
   _getAttr_x(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-
     path.attr("x", function(d) {
-      return widthScale(d[obj.xLabel]);
+      return obj.widthScale(d[obj.xLabel]);
     });
   };
   _getAttr_y(path, obj) {
@@ -148,10 +154,8 @@ class Bargraph extends Base_D3 {
     });
   };
   _getAttr_cx(path, obj) {
-    var widthScale = obj.getWidthScale(path.data());
-
     path.attr("cx", function(d) {
-      return widthScale(d[yLabel]);
+      return obj.widthScale(d[yLabel]);
     });
   };
   _getAttr_cy(path, obj) {
