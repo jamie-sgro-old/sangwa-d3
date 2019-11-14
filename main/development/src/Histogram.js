@@ -16,6 +16,23 @@ class Histogram extends Base_D3 {
   };
 
 
+
+  /**
+   * getColour - map integer value along a range between two or more colours
+   *
+   * @param  {array} data value in question to be mapped
+   * @return {obj}      a linear scale as a hexidecimal or rgb
+   */
+  getColour(data) {
+    var yLabel = this.yLabel;
+    return d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) {
+        return d.length;
+      })])
+      .range([this.colourBottom, this.colourTop]);
+  };
+
+
   /**
   * Map integers of any range to a particular pixel point on an svg element
   *
@@ -83,6 +100,15 @@ class Histogram extends Base_D3 {
       return obj.height - heightScale(d.length);
     });
   };
+  _getAttr_fill(path, obj) {
+    var yLabel = obj.yLabel;
+
+    var colour = obj.getColour(path.data());
+
+    path.attr("fill", function(d) {
+      return colour(d.length);
+    });
+  };
 
 
 
@@ -119,9 +145,8 @@ class Histogram extends Base_D3 {
       .enter()
       .append("rect")
         .attr("class", "bar")
-        .call(this.getAttr, this, ["x", "y", "width", "height"])
-        .attr("transform", "translate(" + 1 + "," + 0 + ")")
-        .attr("fill", "steelblue");
+        .call(this.getAttr, this, ["x", "y", "width", "height", "fill"])
+        .attr("transform", "translate(" + 1 + "," + 0 + ")");
 
     // add the x Axis
     this.canvas
