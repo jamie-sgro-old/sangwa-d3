@@ -117,7 +117,7 @@ class Bargraph extends Base_D3 {
     });
 
     var range = d3.extent(flattenX);
-    var numDays = d3.timeDay.count(range[0], range[1]);
+    var numDays = d3.timeDay.count(range[0], range[1]) + 1;
 
     path.attr("width", obj.width / numDays);
   };
@@ -211,6 +211,8 @@ class Bargraph extends Base_D3 {
 
     this.min = d3.min(flattenX);
     this.max = d3.max(flattenX);
+    // add a single day since x axis ends at begining of max day
+    this.max = d3.timeDay.offset(this.max, 1)
 
     this.widthScale = this.getWidthScale(this.min, this.max);
 
