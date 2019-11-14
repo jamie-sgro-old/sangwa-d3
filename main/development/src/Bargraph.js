@@ -206,6 +206,12 @@ class Bargraph extends Base_D3 {
 
 
 
+  postPlot() {
+
+  };
+
+
+
   /**
    * plot - Instantiate the visualization based on the data provided
    *
@@ -234,5 +240,7 @@ class Bargraph extends Base_D3 {
       .append("g")
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
+
+    this.postPlot();
   };
 };
