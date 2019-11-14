@@ -13,6 +13,7 @@ class Histogram extends Base_D3 {
     this.max = 0;
     this.min = 0;
     this.widthScale = function() {};
+    this.heightScale = function() {};
   };
 
 
@@ -81,10 +82,8 @@ class Histogram extends Base_D3 {
     });
   };
   _getAttr_y(path, obj) {
-    var heightScale = obj.getHeightScale(path.data());
-
     path.attr("y", function(d) {
-      return heightScale(d.length);
+      return obj.heightScale(d.length);
     });
   };
   _getAttr_width(path, obj) {
@@ -94,10 +93,8 @@ class Histogram extends Base_D3 {
     });
   };
   _getAttr_height(path, obj) {
-    var heightScale = obj.getHeightScale(path.data());
-
     path.attr("height", function(d) {
-      return obj.height - heightScale(d.length);
+      return obj.height - obj.heightScale(d.length);
     });
   };
   _getAttr_fill(path, obj) {
@@ -125,6 +122,7 @@ class Histogram extends Base_D3 {
     this.widthScale = this.getWidthScale(this.domain);
 
     var data = this.getBins(this, map);
+    this.heightScale = this.getHeightScale(data);
 
     return(data);
   };
