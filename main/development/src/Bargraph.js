@@ -202,7 +202,10 @@ class Bargraph extends Base_D3 {
 
 
 
-  postPlot() {
+  postPlot(data) {
+    var motion = new Motion_D3;
 
+    this.canvas.selectAll("rect.bar")
+      .call(motion.attrTween, 800, "fill", "blue");
   };
 };
