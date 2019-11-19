@@ -8,12 +8,6 @@ class Bargraph extends Base_D3 {
 
     this.xLabel = "start_date";
     this.yLabel = "value";
-
-    this.colour_D3 = new Colour_D3;
-
-    this.getColour = this.colour_D3.getColour;
-    this._getAttr_fill = this.colour_D3._getAttr_fill;
-    this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
   };
 
 
@@ -38,33 +32,9 @@ class Bargraph extends Base_D3 {
 
 
 
-  // TODO: add switch to include non-date data
-  /* DEPRECATED
-  getHeightScale() {
-    return d3.scaleBand()
-      .domain(dataArray.map(function(d) {
-        return d.name;
-      }))
-    .range([this.height, 0])
-    .padding(0.1)
-  };
-  */
-
-
-
   /** Polymorphism */
   getWidthScale() {};
 
-
-
-  // TODO: add switch to include non-date data
-  /* DEPRECATED
-  getWidthScale() {
-    return d3.scaleLinear()
-      .domain([0, this.max])
-      .range([0, this.width]);
-  };
-  */
 
 
   _x(d, obj) {

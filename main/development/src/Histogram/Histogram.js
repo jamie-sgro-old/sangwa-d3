@@ -8,12 +8,6 @@ class Histogram extends Base_D3 {
 
     this.binNum = binNum;
     this.yLabel = "value";
-
-    this.colour_D3 = new Colour_D3;
-
-    this.getColour = this.colour_D3.getColour;
-    this._getAttr_fill = this.colour_D3._getAttr_fill;
-    this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
   };
 
 
