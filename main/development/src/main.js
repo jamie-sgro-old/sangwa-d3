@@ -1,6 +1,7 @@
 define(function (require) {
-    require("./Base_D3.js");
-    require("./Motion_D3.js");
+    require("./_D3/Base_D3.js");
+    require("./_D3/Motion_D3.js");
+    require("./_D3/Colour_D3.js");
     require("./_Int.js");
     require("./_Date.js");
     require("./Histogram/Histogram.js");
