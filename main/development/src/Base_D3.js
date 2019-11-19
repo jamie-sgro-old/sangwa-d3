@@ -85,6 +85,27 @@ class Base_D3 {
 
 
 
+  _getAttr_x(path, obj) {
+    path.attr("x", function(d) {
+      return obj._x(d, obj)
+    });
+  };
+  _getAttr_y(path, obj) {
+    path.attr("y", function(d) {
+      return obj._y(d, obj);
+    });
+  };
+  _getAttr_width(path, obj) {
+    path.attr("width", obj._width(path, obj));
+  };
+  _getAttr_height(path, obj) {
+    path.attr("height", function(d) {
+      return obj._height(d, obj);
+    });
+  };
+
+
+
   /**
   * Constructor for reused attributes for d3 elements. All updates to common
   * atrributes are stored in this single function for rapid updating
@@ -145,13 +166,16 @@ class Base_D3 {
   plot(rawData) {
 
     var data = this.prePlot(rawData);
+    var obj = this;
 
     this.canvas.selectAll("rect.bar")
       .data(data)
       .enter()
       .append("rect")
         .attr("class", "bar")
-        .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
+        .attr("height", 0)
+        .attr("y", obj.height)
+        .call(this.getAttr, this, ["x", "width", "fill"]);
 
     // add the x Axis
     this.canvas
@@ -166,5 +190,18 @@ class Base_D3 {
         .call(this.getYAxis, this, data);
 
     this.postPlot(data);
+  };
+
+
+
+  update(data, obj) {
+    var motion = new Motion_D3;
+
+    this.canvas.selectAll("rect.bar")
+      .data(data)
+        .each(function(d) {
+          d3.select(this).call(motion.attrTween, 800, "height", obj._height(d, obj));
+          d3.select(this).call(motion.attrTween, 800, "y", obj._y(d, obj));
+        })
   };
 }; // End Class

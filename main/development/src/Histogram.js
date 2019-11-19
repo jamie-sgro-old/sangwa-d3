@@ -75,31 +75,20 @@ class Histogram extends Base_D3 {
   };
 
 
-
-  _getAttr_x(path, obj) {
-    path.attr("x", function(d) {
-      return obj.widthScale(d.x0);
-    });
+  _x(d, obj) {
+    return obj.widthScale(d.x0);
   };
-  _getAttr_y(path, obj) {
-    path.attr("y", function(d) {
-      return obj.heightScale(d.length);
-    });
+  _y(d, obj) {
+    return obj.heightScale(d.length);
   };
-  _getAttr_width(path, obj) {
-    path.attr("width", function(d) {
-      var db = path.data();
-      return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
-    });
+  _width(path, obj) {
+    var db = path.data();
+    return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
   };
-  _getAttr_height(path, obj) {
-    path.attr("height", function(d) {
-      return obj.height - obj.heightScale(d.length);
-    });
+  _height(d, obj) {
+    return obj.height - obj.heightScale(d.length);
   };
   _getAttr_fill(path, obj) {
-    var yLabel = obj.yLabel;
-
     var colour = obj.getColour(path.data());
 
     path.attr("fill", function(d) {
@@ -132,5 +121,7 @@ class Histogram extends Base_D3 {
   postPlot(data) {
     this.canvas.selectAll("rect.bar")
       .attr("transform", "translate(" + 1 + "," + 0 + ")");
+
+    this.update(data, this);
   };
 }; // End Class

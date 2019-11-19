@@ -84,20 +84,13 @@ class Bargraph extends Base_D3 {
   */
 
 
-
-  _getAttr_x(path, obj) {
-    path.attr("x", function(d) {
-      return obj.widthScale(d[obj.xLabel]);
-    });
+  _x(d, obj) {
+    return obj.widthScale(d[obj.xLabel]);
   };
-  _getAttr_y(path, obj) {
-    path.attr("y", function(d) {
-      var yLabel = obj.yLabel;
-
-      return obj.heightScale(d[yLabel]);
-    });
+  _y(d, obj) {
+    return obj.heightScale(d[obj.yLabel]);
   };
-  _getAttr_width(path, obj) {
+  _width(path, obj) {
     var flattenX = path.data().map(function(x) {
         return x[obj.xLabel];
     });
@@ -105,29 +98,23 @@ class Bargraph extends Base_D3 {
     var range = d3.extent(flattenX);
     var numDays = d3.timeDay.count(range[0], range[1]) + 1;
 
-    path.attr("width", obj.width / numDays);
+    return obj.width / numDays;
   };
-  _getAttr_height(path, obj) {
-    var yLabel = obj.yLabel;
-
-    path.attr("height", function(d) {
-      return obj.height - obj.heightScale(d[yLabel]);
-    })
+  _height(d, obj) {
+    return obj.height - obj.heightScale(d[obj.yLabel]);
   };
   _getAttr_fill(path, obj) {
-    var yLabel = obj.yLabel;
-
     var colour = obj.getColour(path.data());
 
     path.attr("fill", function(d) {
-      return colour(d[yLabel]);
+      return colour(d[obj.yLabel]);
     });
   };
   _getAttr_fillTransparent(path, obj) {
     var colour = obj.getColour(path.data());
 
     path.attr("fill", function(d) {
-      rtn = colour(d[yLabel]);
+      rtn = colour(d[obj.yLabel]);
       return setAlpha(rtn, 0);
     });
   };
@@ -162,5 +149,7 @@ class Bargraph extends Base_D3 {
 
     this.canvas.selectAll("rect.bar")
       .call(motion.attrTween, 800, "fill", "blue");
+
+    this.update(data, this);
   };
 };
