@@ -38,6 +38,18 @@ class Base_D3 {
     this.colourBottom = colour.bottom;
     this.colourTop = colour.top;
 
+    //init as empty to be modified when data is provided
+    this.max = 0;
+    this.min = 0;
+    this.widthScale = function() {};
+    this.heightScale = function() {};
+
+    this.colour_D3 = new Colour_D3;
+
+    this.getColour = this.colour_D3.getColour;
+    this._getAttr_fill = this.colour_D3._getAttr_fill;
+    this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
+
     /**
     * Formats the size of the element based on parameters set in construction
     *

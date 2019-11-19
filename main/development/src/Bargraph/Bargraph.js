@@ -8,29 +8,6 @@ class Bargraph extends Base_D3 {
 
     this.xLabel = "start_date";
     this.yLabel = "value";
-
-    //init as empty to be modified when data is provided
-    this.max = 0;
-    this.min = 0;
-    this.widthScale = function() {};
-    this.heightScale = function() {};
-  };
-
-
-
-  /**
-   * getColour - map integer value along a range between two or more colours
-   *
-   * @param  {array} data value in question to be mapped
-   * @return {obj}      a linear scale as a hexidecimal or rgb
-   */
-  getColour(data) {
-    var yLabel = this.yLabel;
-    return d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) {
-        return d[yLabel];
-      })])
-      .range([this.colourBottom, this.colourTop]);
   };
 
 
@@ -55,33 +32,9 @@ class Bargraph extends Base_D3 {
 
 
 
-  // TODO: add switch to include non-date data
-  /* DEPRECATED
-  getHeightScale() {
-    return d3.scaleBand()
-      .domain(dataArray.map(function(d) {
-        return d.name;
-      }))
-    .range([this.height, 0])
-    .padding(0.1)
-  };
-  */
-
-
-
   /** Polymorphism */
   getWidthScale() {};
 
-
-
-  // TODO: add switch to include non-date data
-  /* DEPRECATED
-  getWidthScale() {
-    return d3.scaleLinear()
-      .domain([0, this.max])
-      .range([0, this.width]);
-  };
-  */
 
 
   _x(d, obj) {
@@ -103,22 +56,6 @@ class Bargraph extends Base_D3 {
   _height(d, obj) {
     return obj.height - obj.heightScale(d[obj.yLabel]);
   };
-  _getAttr_fill(path, obj) {
-    var colour = obj.getColour(path.data());
-
-    path.attr("fill", function(d) {
-      return colour(d[obj.yLabel]);
-    });
-  };
-  _getAttr_fillTransparent(path, obj) {
-    var colour = obj.getColour(path.data());
-
-    path.attr("fill", function(d) {
-      rtn = colour(d[obj.yLabel]);
-      return setAlpha(rtn, 0);
-    });
-  };
-
 
 
 

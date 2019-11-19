@@ -8,30 +8,8 @@ class Histogram extends Base_D3 {
 
     this.binNum = binNum;
     this.yLabel = "value";
-
-    //init as empty to be modified when data is provided
-    this.max = 0;
-    this.min = 0;
-    this.widthScale = function() {};
-    this.heightScale = function() {};
   };
 
-
-
-  /**
-   * getColour - map integer value along a range between two or more colours
-   *
-   * @param  {array} data value in question to be mapped
-   * @return {obj}      a linear scale as a hexidecimal or rgb
-   */
-  getColour(data) {
-    var yLabel = this.yLabel;
-    return d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) {
-        return d.length;
-      })])
-      .range([this.colourBottom, this.colourTop]);
-  };
 
 
   /**
@@ -79,21 +57,14 @@ class Histogram extends Base_D3 {
     return obj.widthScale(d.x0);
   };
   _y(d, obj) {
-    return obj.heightScale(d.length);
+    return obj.heightScale(d[obj.yLabel]);
   };
   _width(path, obj) {
     var db = path.data();
     return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
   };
   _height(d, obj) {
-    return obj.height - obj.heightScale(d.length);
-  };
-  _getAttr_fill(path, obj) {
-    var colour = obj.getColour(path.data());
-
-    path.attr("fill", function(d) {
-      return colour(d.length);
-    });
+    return obj.height - obj.heightScale(d[obj.yLabel]);
   };
 
 
@@ -112,6 +83,8 @@ class Histogram extends Base_D3 {
 
     var data = this.getBins(this, map);
     this.heightScale = this.getHeightScale(data);
+
+    this.yLabel = "length"
 
     return(data);
   };
