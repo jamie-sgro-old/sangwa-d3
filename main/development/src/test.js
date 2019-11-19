@@ -1,4 +1,4 @@
-var running = "bar";
+var running = "hist";
 
 if (running == "bar") {
   b = new Bargraph_Date(
@@ -6,6 +6,8 @@ if (running == "bar") {
     250,
     {top: 30, right: 30, bottom: 30, left: 30},
     {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+    yLabel = "value",
+    xLabel = "start_date",
   );
 
   dataDate = [
@@ -28,7 +30,8 @@ if (running == "bar") {
     250,
     {top: 10, right: 80, bottom: 30, left: 30},
     {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
-    binNum = 10
+    binNum = 10,
+    yLabel = "value",
   );
 
   dataInt = [
@@ -51,7 +54,8 @@ if (running == "bar") {
     250,
     {top: 10, right: 30, bottom: 30, left: 30},
     {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
-    binNum = 10
+    binNum = 10,
+    yLabel = "value",
   );
 
   dataDate = [
