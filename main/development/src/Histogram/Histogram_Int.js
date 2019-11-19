@@ -6,8 +6,8 @@
  */
 class Histogram_Int extends Histogram {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum) {
-    super(width, height, margin, colour, binNum);
+  constructor(width, height, margin, colour, binNum, yLabel) {
+    super(width, height, margin, colour, binNum, yLabel);
 
     this._int = new _Int;
 
