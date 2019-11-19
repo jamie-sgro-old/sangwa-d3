@@ -87,10 +87,9 @@ class Histogram extends Base_D3 {
     });
   };
   _getAttr_width(path, obj) {
-    path.attr("width", function(d) {
-      var db = path.data();
-      return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
-    });
+    var db = path.data();
+    var width = obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
+    path.attr("width", width);
   };
   _getAttr_height(path, obj) {
     path.attr("height", function(d) {
