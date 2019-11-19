@@ -9,12 +9,6 @@ class Bargraph extends Base_D3 {
     this.xLabel = "start_date";
     this.yLabel = "value";
 
-    //init as empty to be modified when data is provided
-    this.max = 0;
-    this.min = 0;
-    this.widthScale = function() {};
-    this.heightScale = function() {};
-
     this.colour_D3 = new Colour_D3;
 
     this.getColour = this.colour_D3.getColour;
