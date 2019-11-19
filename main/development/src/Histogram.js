@@ -107,8 +107,6 @@ class Histogram extends Base_D3 {
     });
   };
   _getAttr_fill(path, obj) {
-    var yLabel = obj.yLabel;
-
     var colour = obj.getColour(path.data());
 
     path.attr("fill", function(d) {
