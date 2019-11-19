@@ -1,5 +1,5 @@
 /**
- * Base class of all d3 all super classes
+ * Base class of all d3 motion related functions
  */
 
 class Motion_D3 {
