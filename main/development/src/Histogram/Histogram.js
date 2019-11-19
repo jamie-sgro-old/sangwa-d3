@@ -3,11 +3,11 @@
  */
 class Histogram extends Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum) {
+  constructor(width, height, margin, colour, binNum, yLabel = "value") {
     super(width, height, margin, colour);
 
     this.binNum = binNum;
-    this.yLabel = "value";
+    this.yLabel = yLabel;
   };
 
 
