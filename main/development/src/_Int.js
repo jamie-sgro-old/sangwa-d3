@@ -1,14 +1,15 @@
 /**
- * Extention of Histogram for data that is of type: Int
+ * Extention of Data_D3 for data that is of type: Int
  * @class
  *
  *
  */
-class Histogram_Int extends Histogram {
+class _Int {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum) {
-    super(width, height, margin, colour, binNum);
+  constructor() {
+
   };
+
 
 
   /**
@@ -28,6 +29,7 @@ class Histogram_Int extends Histogram {
   };
 
 
+
   /**
    * parseRawData - pre clean raw data in the form of an integer to float messy integers
    *
@@ -37,9 +39,28 @@ class Histogram_Int extends Histogram {
    * @return {array}         an array of parsed json objects according to
    *  parseFloat()
    */
-  parseRawData(obj, rawData) {
+  parseRawData_one(obj, rawData) {
     return rawData.map(function(d, i) {
       return parseFloat(d[obj.yLabel]);
+    });
+  };
+
+
+
+  /**
+   * parseRawData - pre clean raw data in the form of a string that matches the
+   *  date string inherited from class
+   *
+   * @param  {array} rawData an array of json objects
+   * @return {array}         an array of parsed json objects according to
+   *  d3.timeParse
+   */
+  parseRawData_two(obj, rawData) {
+    return rawData.map(function(d, i) {
+      return {
+        [obj.xLabel]: parseFloat(d[obj.xLabel]),
+        [obj.yLabel]: parseFloat(d[obj.yLabel])
+      };
     });
   };
 }; // End Class

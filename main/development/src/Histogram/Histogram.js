@@ -3,35 +3,13 @@
  */
 class Histogram extends Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum) {
+  constructor(width, height, margin, colour, binNum, yLabel = "value") {
     super(width, height, margin, colour);
 
     this.binNum = binNum;
-    this.yLabel = "value";
-
-    //init as empty to be modified when data is provided
-    this.max = 0;
-    this.min = 0;
-    this.widthScale = function() {};
-    this.heightScale = function() {};
+    this.yLabel = yLabel;
   };
 
-
-
-  /**
-   * getColour - map integer value along a range between two or more colours
-   *
-   * @param  {array} data value in question to be mapped
-   * @return {obj}      a linear scale as a hexidecimal or rgb
-   */
-  getColour(data) {
-    var yLabel = this.yLabel;
-    return d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) {
-        return d.length;
-      })])
-      .range([this.colourBottom, this.colourTop]);
-  };
 
 
   /**
@@ -75,36 +53,18 @@ class Histogram extends Base_D3 {
   };
 
 
-
-  _getAttr_x(path, obj) {
-    path.attr("x", function(d) {
-      return obj.widthScale(d.x0);
-    });
+  _x(d, obj) {
+    return obj.widthScale(d.x0);
   };
-  _getAttr_y(path, obj) {
-    path.attr("y", function(d) {
-      return obj.heightScale(d.length);
-    });
+  _y(d, obj) {
+    return obj.heightScale(d[obj.yLabel]);
   };
-  _getAttr_width(path, obj) {
-    path.attr("width", function(d) {
-      var db = path.data();
-      return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
-    });
+  _width(path, obj) {
+    var db = path.data();
+    return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
   };
-  _getAttr_height(path, obj) {
-    path.attr("height", function(d) {
-      return obj.height - obj.heightScale(d.length);
-    });
-  };
-  _getAttr_fill(path, obj) {
-    var yLabel = obj.yLabel;
-
-    var colour = obj.getColour(path.data());
-
-    path.attr("fill", function(d) {
-      return colour(d.length);
-    });
+  _height(d, obj) {
+    return obj.height - obj.heightScale(d[obj.yLabel]);
   };
 
 
@@ -124,13 +84,17 @@ class Histogram extends Base_D3 {
     var data = this.getBins(this, map);
     this.heightScale = this.getHeightScale(data);
 
+    this.yLabel = "length"
+
     return(data);
   };
 
 
 
-  postPlot() {
+  postPlot(data) {
     this.canvas.selectAll("rect.bar")
       .attr("transform", "translate(" + 1 + "," + 0 + ")");
+
+    this.update(data, this);
   };
 }; // End Class

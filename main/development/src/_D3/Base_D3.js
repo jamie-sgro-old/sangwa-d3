@@ -6,6 +6,21 @@
  *  @author       Jamie Sgro
  *
  *  @requires     {@link https://d3js.org/d3.v5.min.js d3.v5}
+ *
+ *  @license
+ *     Copyright 2019 Sangwa / Sangwa Libraries
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License
  */
 
 
@@ -22,6 +37,18 @@ class Base_D3 {
 
     this.colourBottom = colour.bottom;
     this.colourTop = colour.top;
+
+    //init as empty to be modified when data is provided
+    this.max = 0;
+    this.min = 0;
+    this.widthScale = function() {};
+    this.heightScale = function() {};
+
+    this.colour_D3 = new Colour_D3;
+
+    this.getColour = this.colour_D3.getColour;
+    this._getAttr_fill = this.colour_D3._getAttr_fill;
+    this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
 
     /**
     * Formats the size of the element based on parameters set in construction
@@ -67,6 +94,27 @@ class Base_D3 {
 
   /** Polymorphism */
   prePlot() {};
+
+
+
+  _getAttr_x(path, obj) {
+    path.attr("x", function(d) {
+      return obj._x(d, obj)
+    });
+  };
+  _getAttr_y(path, obj) {
+    path.attr("y", function(d) {
+      return obj._y(d, obj);
+    });
+  };
+  _getAttr_width(path, obj) {
+    path.attr("width", obj._width(path, obj));
+  };
+  _getAttr_height(path, obj) {
+    path.attr("height", function(d) {
+      return obj._height(d, obj);
+    });
+  };
 
 
 
@@ -130,13 +178,16 @@ class Base_D3 {
   plot(rawData) {
 
     var data = this.prePlot(rawData);
+    var obj = this;
 
     this.canvas.selectAll("rect.bar")
       .data(data)
       .enter()
       .append("rect")
         .attr("class", "bar")
-        .call(this.getAttr, this, ["x", "y", "width", "height", "fill"]);
+        .attr("height", 0)
+        .attr("y", obj.height)
+        .call(this.getAttr, this, ["x", "width", "fill"]);
 
     // add the x Axis
     this.canvas
@@ -150,6 +201,19 @@ class Base_D3 {
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
 
-    this.postPlot();
+    this.postPlot(data);
+  };
+
+
+
+  update(data, obj) {
+    var motion = new Motion_D3;
+
+    this.canvas.selectAll("rect.bar")
+      .data(data)
+        .each(function(d) {
+          d3.select(this).call(motion.attrTween, 800, "height", obj._height(d, obj));
+          d3.select(this).call(motion.attrTween, 800, "y", obj._y(d, obj));
+        })
   };
 }; // End Class

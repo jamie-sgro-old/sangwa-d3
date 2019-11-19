@@ -1,7 +1,7 @@
 var running = true;
 
 if (running) {
-  b = new Bargraph(
+  b = new Bargraph_Date(
     960,
     500,
     {top: 30, right: 30, bottom: 30, left: 30},
