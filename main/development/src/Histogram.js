@@ -131,5 +131,22 @@ class Histogram extends Base_D3 {
   postPlot(data) {
     this.canvas.selectAll("rect.bar")
       .attr("transform", "translate(" + 1 + "," + 0 + ")");
+
+    this.update(data, this);
+  };
+
+  update(data, obj) {
+    var motion = new Motion_D3;
+
+    this.canvas.selectAll("rect.bar")
+      .data(data)
+        .each(function(d) {
+          d3.select(this).call(
+            motion.attrTween, 800, "height", obj.height - obj.heightScale(d.length)
+          );
+          d3.select(this).call(
+            motion.attrTween, 800, "y", obj.heightScale(d.length)
+          );
+        })
   };
 }; // End Class
