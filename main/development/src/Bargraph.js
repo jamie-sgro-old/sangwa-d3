@@ -87,18 +87,8 @@ class Bargraph extends Base_D3 {
   _x(d, obj) {
     return obj.widthScale(d[obj.xLabel]);
   };
-  _getAttr_x(path, obj) {
-    path.attr("x", function(d) {
-      return obj._x(d, obj)
-    });
-  };
   _y(d, obj) {
     return obj.heightScale(d[obj.yLabel]);
-  };
-  _getAttr_y(path, obj) {
-    path.attr("y", function(d) {
-      return obj._y(d, obj);
-    });
   };
   _width(path, obj) {
     var flattenX = path.data().map(function(x) {
@@ -110,16 +100,8 @@ class Bargraph extends Base_D3 {
 
     return obj.width / numDays;
   };
-  _getAttr_width(path, obj) {
-    path.attr("width", obj._width(path, obj));
-  };
   _height(d, obj) {
     return obj.height - obj.heightScale(d[obj.yLabel]);
-  };
-  _getAttr_height(path, obj) {
-    path.attr("height", function(d) {
-      return obj._height(d, obj);
-    })
   };
   _getAttr_fill(path, obj) {
     var colour = obj.getColour(path.data());
@@ -167,5 +149,7 @@ class Bargraph extends Base_D3 {
 
     this.canvas.selectAll("rect.bar")
       .call(motion.attrTween, 800, "fill", "blue");
+
+    this.update(data, this);
   };
 };

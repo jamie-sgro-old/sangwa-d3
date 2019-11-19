@@ -78,33 +78,15 @@ class Histogram extends Base_D3 {
   _x(d, obj) {
     return obj.widthScale(d.x0);
   };
-  _getAttr_x(path, obj) {
-    path.attr("x", function(d) {
-      return obj._x(d, obj)
-    });
-  };
   _y(d, obj) {
     return obj.heightScale(d.length);
-  };
-  _getAttr_y(path, obj) {
-    path.attr("y", function(d) {
-      return obj._y(d, obj);
-    });
   };
   _width(path, obj) {
     var db = path.data();
     return obj.widthScale(db[0].x1) - obj.widthScale(db[0].x0) - 1;
   };
-  _getAttr_width(path, obj) {
-    path.attr("width", obj._width(path, obj));
-  };
   _height(d, obj) {
     return obj.height - obj.heightScale(d.length);
-  };
-  _getAttr_height(path, obj) {
-    path.attr("height", function(d) {
-      return obj._height(d, obj);
-    });
   };
   _getAttr_fill(path, obj) {
     var colour = obj.getColour(path.data());
@@ -141,16 +123,5 @@ class Histogram extends Base_D3 {
       .attr("transform", "translate(" + 1 + "," + 0 + ")");
 
     this.update(data, this);
-  };
-
-  update(data, obj) {
-    var motion = new Motion_D3;
-
-    this.canvas.selectAll("rect.bar")
-      .data(data)
-        .each(function(d) {
-          d3.select(this).call(motion.attrTween, 800, "height", obj._height(d, obj));
-          d3.select(this).call(motion.attrTween, 800, "y", obj._y(d, obj));
-        })
   };
 }; // End Class
