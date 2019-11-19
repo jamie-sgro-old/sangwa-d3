@@ -14,23 +14,12 @@ class Bargraph extends Base_D3 {
     this.min = 0;
     this.widthScale = function() {};
     this.heightScale = function() {};
-  };
 
+    this.colour_D3 = new Colour_D3;
 
-
-  /**
-   * getColour - map integer value along a range between two or more colours
-   *
-   * @param  {array} data value in question to be mapped
-   * @return {obj}      a linear scale as a hexidecimal or rgb
-   */
-  getColour(data) {
-    var yLabel = this.yLabel;
-    return d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) {
-        return d[yLabel];
-      })])
-      .range([this.colourBottom, this.colourTop]);
+    this.getColour = this.colour_D3.getColour;
+    this._getAttr_fill = this.colour_D3._getAttr_fill;
+    this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
   };
 
 
@@ -103,22 +92,6 @@ class Bargraph extends Base_D3 {
   _height(d, obj) {
     return obj.height - obj.heightScale(d[obj.yLabel]);
   };
-  _getAttr_fill(path, obj) {
-    var colour = obj.getColour(path.data());
-
-    path.attr("fill", function(d) {
-      return colour(d[obj.yLabel]);
-    });
-  };
-  _getAttr_fillTransparent(path, obj) {
-    var colour = obj.getColour(path.data());
-
-    path.attr("fill", function(d) {
-      rtn = colour(d[obj.yLabel]);
-      return setAlpha(rtn, 0);
-    });
-  };
-
 
 
 
