@@ -3,10 +3,10 @@ define(function (require) {
     require("./Motion_D3.js");
     require("./_Int.js");
     require("./_Date.js");
-    require("./Histogram.js");
-    require("./Histogram_Int.js");
-    require("./Histogram_Date.js");
-    require("./Bargraph.js");
-    require("./Bargraph_Date.js");
+    require("./Histogram/Histogram.js");
+    require("./Histogram/Histogram_Int.js");
+    require("./Histogram/Histogram_Date.js");
+    require("./Bargraph/Bargraph.js");
+    require("./Bargraph/Bargraph_Date.js");
     require("./test.js");
 });
