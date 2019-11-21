@@ -52,8 +52,8 @@ class Base_D3 {
     this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
 
     //add pub module
-    this.pub_D3 = new Pub_D3
-
+    this.pub_D3 = new Pub_D3;
+    this.makePubBtn = this.pub_D3.makePubBtn
     /**
     * Formats the size of the element based on parameters set in construction
     *
@@ -205,6 +205,8 @@ class Base_D3 {
       .append("g")
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
+
+    this.makePubBtn();
 
     this.postPlot(data);
   };
