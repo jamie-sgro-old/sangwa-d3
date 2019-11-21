@@ -3,8 +3,8 @@
  */
 class Bargraph extends Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour, yLabel = "value", xLabel = "start_date") {
-    super(width, height, margin, colour);
+  constructor(id, width, height, margin, colour, yLabel = "value", xLabel = "start_date") {
+    super(id, width, height, margin, colour);
 
     this.xLabel = xLabel;
     this.yLabel = yLabel;

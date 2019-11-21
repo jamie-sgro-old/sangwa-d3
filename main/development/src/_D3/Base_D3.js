@@ -30,7 +30,8 @@
 
 class Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour) {
+  constructor(id, width, height, margin, colour) {
+    this.id = id;
     this.margin = margin;
     this.width = width - this.margin.left - this.margin.right;
     this.height = height - this.margin.top - this.margin.bottom;
@@ -44,12 +45,15 @@ class Base_D3 {
     this.widthScale = function() {};
     this.heightScale = function() {};
 
+    //add colour module
     this.colour_D3 = new Colour_D3;
-
     this.getColour = this.colour_D3.getColour;
     this._getAttr_fill = this.colour_D3._getAttr_fill;
     this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
 
+    //add pub module
+    this.pub_D3 = new Pub_D3;
+    this.makePubBtn = this.pub_D3.makePubBtn
     /**
     * Formats the size of the element based on parameters set in construction
     *
@@ -68,6 +72,7 @@ class Base_D3 {
 
     this.svg = d3.select("body")
       .append("svg")
+        .attr("id", id)
         .attr("class", "graph svg")
         .call(this.getSvgSize, this);
 
@@ -200,6 +205,8 @@ class Base_D3 {
       .append("g")
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
+
+    this.makePubBtn();
 
     this.postPlot(data);
   };
