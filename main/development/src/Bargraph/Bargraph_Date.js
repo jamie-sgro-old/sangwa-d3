@@ -7,8 +7,8 @@
  */
 class Bargraph_Date extends Bargraph {
   /** @constructor */
-  constructor(width, height, margin, colour, yLabel, xLabel) {
-    super(width, height, margin, colour, yLabel, xLabel);
+  constructor(id, width, height, margin, colour, yLabel, xLabel) {
+    super(id, width, height, margin, colour, yLabel, xLabel);
 
     this._date = new _Date;
 

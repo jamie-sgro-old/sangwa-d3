@@ -26,6 +26,7 @@ if (running == "bar") {
   b.plot(dataDate);
 } else if (running == "hist") {
   h = new Histogram_Int(
+    "histogramInt.svg",
     800,
     250,
     {top: 10, right: 80, bottom: 30, left: 30},
@@ -50,6 +51,7 @@ if (running == "bar") {
 
 
   h = new Histogram_Date(
+    "histogramDate.svg",
     800,
     250,
     {top: 10, right: 30, bottom: 30, left: 30},
@@ -73,3 +75,12 @@ if (running == "bar") {
 
   h.plot(dataDate);
 }
+
+d3.select("#download")
+.on('click', function() {
+  //saveSvgAsPng(document.getElementById("histogramDate.svg"), "graph.png");
+  // Get the d3js SVG element and save using saveSvgAsPng.js
+  saveSvgAsPng(document.getElementById("histogramDate.svg"), "graph.png", {scale: 2, backgroundColor: "#FFFFFF"});
+})
+
+//saveSvgAsPng(document.getElementById("histogramDate.svg"), "diagram.png");

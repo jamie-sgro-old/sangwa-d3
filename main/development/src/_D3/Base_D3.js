@@ -30,7 +30,8 @@
 
 class Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour) {
+  constructor(id, width, height, margin, colour) {
+    this.id = id;
     this.margin = margin;
     this.width = width - this.margin.left - this.margin.right;
     this.height = height - this.margin.top - this.margin.bottom;
@@ -68,6 +69,7 @@ class Base_D3 {
 
     this.svg = d3.select("body")
       .append("svg")
+        .attr("id", id)
         .attr("class", "graph svg")
         .call(this.getSvgSize, this);
 
