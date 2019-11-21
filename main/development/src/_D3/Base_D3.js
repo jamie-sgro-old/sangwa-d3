@@ -45,11 +45,14 @@ class Base_D3 {
     this.widthScale = function() {};
     this.heightScale = function() {};
 
+    //add colour module
     this.colour_D3 = new Colour_D3;
-
     this.getColour = this.colour_D3.getColour;
     this._getAttr_fill = this.colour_D3._getAttr_fill;
     this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
+
+    //add pub module
+    this.pub_D3 = new Pub_D3
 
     /**
     * Formats the size of the element based on parameters set in construction
