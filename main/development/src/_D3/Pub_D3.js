@@ -9,15 +9,31 @@ class Pub_D3 {
   };
 
   makePubBtn() {
-    console.log(this.canvas);
+    var obj = this;
+    var unit = 50;
+    var alpha = "0.2"
 
     this.canvas
       .append("g")
         .attr("class", "pub")
         .append("rect")
-        .attr("x", 50)
-        .attr("y", 50)
-        .attr("width", 50)
-        .attr("height", 50)
+        .attr("x", obj.width - unit)
+        .attr("y", 0)
+        .attr("width", unit)
+        .attr("height", unit)
+        .attr("fill", "rgba(0,0,0," + alpha + ")")
+        .on("mouseover", function() {
+          d3.select(this).attr("fill", "rgba(0,0,0,1)")
+        })
+        .on("mouseout", function() {
+          d3.select(this).attr("fill", "rgba(0,0,0," + alpha + ")")
+        })
+        .on("click", function() {
+          saveSvgAsPng(
+            document.getElementById(obj.id),
+            obj.id + ".png",
+            {scale: 2, backgroundColor: "#FFFFFF"}
+          );
+        })
   };
 };
