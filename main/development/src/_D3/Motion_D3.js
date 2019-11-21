@@ -45,4 +45,35 @@ class Motion_D3 {
         };
       });
   };
+
+
+
+  /**
+   * resetTween - same as attrTween, only it conducts two tweens synchronously,
+   * one after the other.
+   *
+   * The duration for the second tween is set to be 3 times longer than the first
+   * usefull for dynamic highlighting and so on.
+   */
+  resetTween(path, duration, attr, endRes, peakRes) {
+    var dummy = {};
+
+    d3.select(dummy)
+      .transition()
+      .duration(duration)
+      .tween(attr, function() {
+        var lerp = d3.interpolate(path.attr(attr), peakRes);
+        return function(t) {
+          path.attr(attr, lerp(t));
+        };
+      })
+      .transition()
+      .duration(duration*3)
+      .tween(attr, function() {
+        var lerp = d3.interpolate(peakRes, endRes);
+        return function(t) {
+          path.attr(attr, lerp(t));
+        };
+      })
+  }
 }; // End Class

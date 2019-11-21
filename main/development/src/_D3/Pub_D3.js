@@ -8,6 +8,13 @@ class Pub_D3 {
 
   };
 
+
+  /**
+   * makePubBtn - Create an interactable button in the svg of the graph (canvas)
+   * that downloads a .png file to the local machine of the id element of the svg
+   *
+   * @return {type}  returns nothing
+   */
   makePubBtn() {
     var obj = this;
     var unit = 50;
@@ -22,6 +29,7 @@ class Pub_D3 {
         .attr("width", unit)
         .attr("height", unit)
         .attr("fill", "rgba(0,0,0," + alpha + ")")
+        .style("cursor", "pointer")
         .on("mouseover", function() {
           d3.select(this).attr("fill", "rgba(0,0,0,1)")
         })
@@ -29,6 +37,8 @@ class Pub_D3 {
           d3.select(this).attr("fill", "rgba(0,0,0," + alpha + ")")
         })
         .on("click", function() {
+          d3.select(this).attr("fill", "rgba(0,0,0,0)")
+
           saveSvgAsPng(
             document.getElementById(obj.id),
             obj.id + ".png",

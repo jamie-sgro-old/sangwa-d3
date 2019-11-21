@@ -75,12 +75,3 @@ if (running == "bar") {
 
   h.plot(dataDate);
 }
-
-d3.select("#download")
-.on('click', function() {
-  //saveSvgAsPng(document.getElementById("histogramDate.svg"), "graph.png");
-  // Get the d3js SVG element and save using saveSvgAsPng.js
-  saveSvgAsPng(document.getElementById("histogramDate.svg"), "graph.png", {scale: 2, backgroundColor: "#FFFFFF"});
-})
-
-//saveSvgAsPng(document.getElementById("histogramDate.svg"), "diagram.png");
