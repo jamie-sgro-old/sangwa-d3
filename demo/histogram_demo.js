@@ -2,6 +2,7 @@ var running = true;
 
 if (running) {
   h = new Histogram_Int(
+		"histogramInt.svg",
     800,
     300,
     {top: 10, right: 30, bottom: 30, left: 30},
@@ -39,6 +40,7 @@ if (running) {
 
 
   h = new Histogram_Date(
+		"histogramDate.svg",
     800,
     300,
     {top: 10, right: 30, bottom: 30, left: 30},
