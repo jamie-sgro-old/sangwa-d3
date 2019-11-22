@@ -26,29 +26,43 @@ class Pub_D3 {
       .append("g")
         .attr("class", "menu")
         .append("rect")
-        .attr("x", obj.width + obj.margin.right - (unit/2))
-        .attr("y", 0 - obj.margin.top - (unit/2))
+        .attr("x", 50)
+        .attr("y", 50)
+        //.attr("x", obj.width + obj.margin.right - (unit/2))
+        //.attr("y", 0 - obj.margin.top - (unit/2))
         .attr("width", unit)
         .attr("height", unit)
-        .attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
+        //.attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
         .attr("fill", "rgba(0,0,0," + alpha + ")")
         .style("cursor", "pointer")
         .on("mouseover", function() {
-          d3.select(this).attr("fill", "rgba(0,0,0,1)")
+          d3.select(this).attr("fill", "rgba(0,0,0,0.8)")
         })
         .on("mouseout", function() {
           d3.select(this).attr("fill", "rgba(0,0,0," + alpha + ")")
         })
         .on("click", function() {
           d3.select(this).attr("fill", "rgba(0,0,0,0)")
-
-          document.getElementById(obj.id).getElementsByClassName("pub")
-
+          //document.getElementById(obj.id).getElementsByClassName("pub")
           saveSvgAsPng(
             document.getElementById(obj.id),
             obj.id + ".png",
             {scale: 2, backgroundColor: "#FFFFFF"}
           );
         })
+
+  d3.select("body")
+    .append("img")
+      .attr("class", "picture")
+      .style("width",  unit/4 + "px")
+      .attr("src", function(d) {
+        //this icon is licensed under the Creative Commons
+        //Attribution 4.0 International license
+        //find out more at https://fontawesome.com/license
+        return "../../../development/images/file-image-regular.svg";
+      })
+      .on("error", function() {
+        console.log("error in retrieving image")
+      })
   };
 };
