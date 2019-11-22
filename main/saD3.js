@@ -1,7 +1,7 @@
 /**
  *  @fileOverview saD3 is a javascript library extending the d3
  * functionality of common graphs matching the conventions perscribed
- * by Sangwa Solutions
+ * by the author
  *
  *  @author       Jamie Sgro
  *
