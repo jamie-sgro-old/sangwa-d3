@@ -10,7 +10,7 @@ copy "development/\src/\_D3/\Base_D3.js"^
  + "development/\src/\Histogram/\Histogram_Int.js"^
  + "development/\src/\Histogram/\Histogram_Date.js"^
  + "development/\src/\Bargraph/\Bargraph.js"^
- + "development/\src/\Bargraph/\Bargraph_Date.js" concat.txt
+ + "development/\src/\Bargraph/\Bargraph_Date.js" saD3.js
 pause
 
 
