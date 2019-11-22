@@ -30,7 +30,8 @@
 
 class Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour) {
+  constructor(id, width, height, margin, colour) {
+    this.id = id;
     this.margin = margin;
     this.width = width - this.margin.left - this.margin.right;
     this.height = height - this.margin.top - this.margin.bottom;
@@ -44,12 +45,15 @@ class Base_D3 {
     this.widthScale = function() {};
     this.heightScale = function() {};
 
+    //add colour module
     this.colour_D3 = new Colour_D3;
-
     this.getColour = this.colour_D3.getColour;
     this._getAttr_fill = this.colour_D3._getAttr_fill;
     this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
 
+    //add pub module
+    this.pub_D3 = new Pub_D3;
+    this.makePubBtn = this.pub_D3.makePubBtn
     /**
     * Formats the size of the element based on parameters set in construction
     *
@@ -68,6 +72,7 @@ class Base_D3 {
 
     this.svg = d3.select("body")
       .append("svg")
+        .attr("id", id)
         .attr("class", "graph svg")
         .call(this.getSvgSize, this);
 
@@ -201,6 +206,8 @@ class Base_D3 {
         .attr("class", "y axis")
         .call(this.getYAxis, this, data);
 
+    this.makePubBtn();
+
     this.postPlot(data);
   };
 
@@ -264,6 +271,37 @@ class Motion_D3 {
         };
       });
   };
+
+
+
+  /**
+   * resetTween - same as attrTween, only it conducts two tweens synchronously,
+   * one after the other.
+   *
+   * The duration for the second tween is set to be 3 times longer than the first
+   * usefull for dynamic highlighting and so on.
+   */
+  resetTween(path, duration, attr, endRes, peakRes) {
+    var dummy = {};
+
+    d3.select(dummy)
+      .transition()
+      .duration(duration)
+      .tween(attr, function() {
+        var lerp = d3.interpolate(path.attr(attr), peakRes);
+        return function(t) {
+          path.attr(attr, lerp(t));
+        };
+      })
+      .transition()
+      .duration(duration*3)
+      .tween(attr, function() {
+        var lerp = d3.interpolate(peakRes, endRes);
+        return function(t) {
+          path.attr(attr, lerp(t));
+        };
+      })
+  }
 }; // End Class
 /**
  * Base class of all d3 motion related functions
@@ -310,6 +348,55 @@ class Colour_D3 {
     });
   };
 }; // End Class
+/**
+ * Base class of all d3 publication related functions
+ */
+
+class Pub_D3 {
+  /** @constructor */
+  constructor() {
+
+  };
+
+
+  /**
+   * makePubBtn - Create an interactable button in the svg of the graph (canvas)
+   * that downloads a .png file to the local machine of the id element of the svg
+   *
+   * @return {type}  returns nothing
+   */
+  makePubBtn() {
+    var obj = this;
+    var unit = 50;
+    var alpha = "0.2"
+
+    this.canvas
+      .append("g")
+        .attr("class", "pub")
+        .append("rect")
+        .attr("x", obj.width - unit)
+        .attr("y", 0)
+        .attr("width", unit)
+        .attr("height", unit)
+        .attr("fill", "rgba(0,0,0," + alpha + ")")
+        .style("cursor", "pointer")
+        .on("mouseover", function() {
+          d3.select(this).attr("fill", "rgba(0,0,0,1)")
+        })
+        .on("mouseout", function() {
+          d3.select(this).attr("fill", "rgba(0,0,0," + alpha + ")")
+        })
+        .on("click", function() {
+          d3.select(this).attr("fill", "rgba(0,0,0,0)")
+
+          saveSvgAsPng(
+            document.getElementById(obj.id),
+            obj.id + ".png",
+            {scale: 2, backgroundColor: "#FFFFFF"}
+          );
+        })
+  };
+};
 /**
  * Extention of Data_D3 for data that is of type: Int
  * @class
@@ -446,8 +533,8 @@ class _Date {
  */
 class Histogram extends Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum, yLabel = "value") {
-    super(width, height, margin, colour);
+  constructor(id, width, height, margin, colour, binNum, yLabel = "value") {
+    super(id, width, height, margin, colour);
 
     this.binNum = binNum;
     this.yLabel = yLabel;
@@ -549,8 +636,8 @@ class Histogram extends Base_D3 {
  */
 class Histogram_Int extends Histogram {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum, yLabel) {
-    super(width, height, margin, colour, binNum, yLabel);
+  constructor(id, width, height, margin, colour, binNum, yLabel) {
+    super(id, width, height, margin, colour, binNum, yLabel);
 
     this._int = new _Int;
 
@@ -567,8 +654,8 @@ class Histogram_Int extends Histogram {
  */
 class Histogram_Date extends Histogram {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum, yLabel) {
-    super(width, height, margin, colour, binNum, yLabel);
+  constructor(id, width, height, margin, colour, binNum, yLabel) {
+    super(id, width, height, margin, colour, binNum, yLabel);
 
     this._date = new _Date;
 
@@ -581,8 +668,8 @@ class Histogram_Date extends Histogram {
  */
 class Bargraph extends Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour, yLabel = "value", xLabel = "start_date") {
-    super(width, height, margin, colour);
+  constructor(id, width, height, margin, colour, yLabel = "value", xLabel = "start_date") {
+    super(id, width, height, margin, colour);
 
     this.xLabel = xLabel;
     this.yLabel = yLabel;
@@ -672,8 +759,8 @@ class Bargraph extends Base_D3 {
  */
 class Bargraph_Date extends Bargraph {
   /** @constructor */
-  constructor(width, height, margin, colour, yLabel, xLabel) {
-    super(width, height, margin, colour, yLabel, xLabel);
+  constructor(id, width, height, margin, colour, yLabel, xLabel) {
+    super(id, width, height, margin, colour, yLabel, xLabel);
 
     this._date = new _Date;
 
@@ -681,3 +768,4 @@ class Bargraph_Date extends Bargraph {
     this.parseRawData = this._date.parseRawData_two;
   };
 };
+
