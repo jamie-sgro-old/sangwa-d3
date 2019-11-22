@@ -1,6 +1,6 @@
 cd %cd%
 cd ../main
-copy "development/\src/\_D3/\Base_D3.js"^
+copy /B "development/\src/\_D3/\Base_D3.js"^
  + "development/\src/\_D3/\Motion_D3.js"^
  + "development/\src/\_D3/\Colour_D3.js"^
  + "development/\src/\_D3/\Pub_D3.js"^

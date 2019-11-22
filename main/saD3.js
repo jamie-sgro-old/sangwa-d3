@@ -768,4 +768,3 @@ class Bargraph_Date extends Bargraph {
     this.parseRawData = this._date.parseRawData_two;
   };
 };
-
