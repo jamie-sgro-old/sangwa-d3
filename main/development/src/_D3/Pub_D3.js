@@ -19,40 +19,39 @@ class Pub_D3 {
    */
   makePubBtn() {
     var obj = this;
-    var unit = 70;
-    var alpha = "0.2"
+    var unit = 80;
+    var imagePadding = 2
+    var alpha = "0.7"
 
     this.canvas
       .append("g")
         .attr("class", "menu")
         .append("rect")
-        .attr("x", obj.width + obj.margin.right - (unit/2))
-        .attr("y", 0 - obj.margin.top - (unit/2))
-        .attr("width", unit)
-        .attr("height", unit)
-        .attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
-        .attr("fill", "rgba(0,0,0," + alpha + ")")
-        .style("cursor", "pointer")
-        .on("mouseover", function() {
-          d3.select(this).attr("fill", "rgba(0,0,0,0.8)")
-        })
-        .on("mouseout", function() {
-          d3.select(this).attr("fill", "rgba(0,0,0," + alpha + ")")
-        })
-        .on("click", function() {
-          d3.select(this).attr("fill", "rgba(0,0,0,0)")
-          //document.getElementById(obj.id).getElementsByClassName("pub")
-          saveSvgAsPng(
-            document.getElementById(obj.id),
-            obj.id + ".png",
-            {scale: 2, backgroundColor: "#FFFFFF"}
-          );
-        })
+          .attr("x", obj.width + obj.margin.right - (unit/2))
+          .attr("y", 0 - obj.margin.top - (unit/2))
+          .attr("width", unit)
+          .attr("height", unit)
+          .attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
+          .attr("fill", "rgba(20, 183, 239," + alpha + ")")
+          .style("cursor", "pointer")
+          .on("mouseover", function() {
+            d3.select(this).attr("fill", "rgba(20, 183, 239,1)")
+          })
+          .on("mouseout", function() {
+            d3.select(this).attr("fill", "rgba(20, 183, 239," + alpha + ")")
+          })
+          .on("click", function() {
+            d3.select(this).attr("fill", "rgba(20, 183, 239,0)")
+            saveSvgAsPng(
+              document.getElementById(obj.id),
+              obj.id + ".png",
+              {scale: 2, backgroundColor: "#FFFFFF"}
+            );
+          })
 
-  d3.select("body")
+  this.div
     .append("img")
       .attr("class", "picture")
-      .style("width",  unit/4 + "px")
       .attr("src", function(d) {
         //this icon is licensed under the Creative Commons
         //Attribution 4.0 International license
@@ -62,5 +61,27 @@ class Pub_D3 {
       .on("error", function() {
         console.log("error in retrieving image")
       })
+      .style("width",  unit/4 + "px")
+      .style("position", "absolute")
+      .style("left", function() {
+        var rtn = document
+          .getElementById(obj.id)
+            .getBoundingClientRect().right;
+
+        rtn -= unit/4;
+        rtn -= imagePadding;
+
+        return rtn.toString() + "px";
+      })
+      .style("top", function() {
+        var rtn = document
+          .getElementById(obj.id)
+          .getBoundingClientRect().top;
+
+        rtn += imagePadding;
+
+        return rtn.toString() + "px";
+      })
+      .style("pointer-events", "none");
   };
 };
