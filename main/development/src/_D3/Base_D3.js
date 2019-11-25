@@ -70,7 +70,10 @@ class Base_D3 {
         .attr("height", obj.height + obj.margin.top + obj.margin.bottom);
     };
 
-    this.svg = d3.select("body")
+    this.div = d3.select("body")
+      .append("div")
+
+    this.svg = this.div
       .append("svg")
         .attr("id", id)
         .attr("class", "graph svg")
@@ -177,6 +180,7 @@ class Base_D3 {
 
   /**
    * plot - Instantiate the visualization based on the data provided
+   * class = .pub means it's publish-able (file download)
    *
    * @param  {array} rawData an array of json objects with a common key
    */
@@ -189,7 +193,7 @@ class Base_D3 {
       .data(data)
       .enter()
       .append("rect")
-        .attr("class", "bar")
+        .attr("class", "bar pub")
         .attr("height", 0)
         .attr("y", obj.height)
         .call(this.getAttr, this, ["x", "width", "fill"]);
@@ -197,13 +201,13 @@ class Base_D3 {
     // add the x Axis
     this.canvas
       .append("g")
-        .attr("class", "x axis")
+        .attr("class", "xAxis axis pub")
         .call(this.getXAxis, this);
 
     // add the y Axis
     this.canvas
       .append("g")
-        .attr("class", "y axis")
+        .attr("class", "yAxis axis pub")
         .call(this.getYAxis, this, data);
 
     this.makePubBtn();
