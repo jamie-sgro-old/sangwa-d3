@@ -5,7 +5,7 @@ if (running == "bar") {
     800,
     250,
     {top: 30, right: 30, bottom: 30, left: 30},
-    {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+    {top: "rgb(20, 183, 239)", bottom: "rgb(255, 255, 255)"},
     yLabel = "value",
     xLabel = "start_date",
   );
@@ -30,7 +30,7 @@ if (running == "bar") {
     800,
     250,
     {top: 30, right: 30, bottom: 30, left: 30},
-    {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+    {top: "rgb(20, 183, 239)", bottom: "rgb(255, 255, 255)"},
     binNum = 10,
     yLabel = "value",
   );
@@ -55,7 +55,7 @@ if (running == "bar") {
     800,
     250,
     {top: 30, right: 30, bottom: 30, left: 30},
-    {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+    {top: "rgb(20, 183, 239)", bottom: "rgb(255, 255, 255)"},
     binNum = 10,
     yLabel = "value",
   );
