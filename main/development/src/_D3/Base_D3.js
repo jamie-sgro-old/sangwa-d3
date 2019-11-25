@@ -70,7 +70,10 @@ class Base_D3 {
         .attr("height", obj.height + obj.margin.top + obj.margin.bottom);
     };
 
-    this.svg = d3.select("body")
+    this.div = d3.select("body")
+      .append("div")
+
+    this.svg = this.div
       .append("svg")
         .attr("id", id)
         .attr("class", "graph svg")
