@@ -42,4 +42,13 @@ class Colour_D3 {
       return setAlpha(rtn, 0);
     });
   };
+
+
+
+  setAlpha(c, v) {
+    var c = d3.rgb(c);
+    c.opacity = v;
+
+    return c;
+  }
 }; // End Class
