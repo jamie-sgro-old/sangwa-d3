@@ -26,7 +26,7 @@ class Pub_D3 {
 
     this.canvas
       .append("g")
-        .attr("class", "menu")
+        .attr("class", "menu resizable")
         .append("rect")
           .attr("x", obj.width + obj.margin.right - (unit/2))
           .attr("y", 0 - obj.margin.top - (unit/2))
