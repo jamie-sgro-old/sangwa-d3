@@ -52,7 +52,7 @@ class Pub_D3 {
 
   this.div
     .append("img")
-      .attr("class", "picture")
+      .attr("class", "picture resizable")
       .attr("src", function(d) {
         //this icon is licensed under the Creative Commons
         //Attribution 4.0 International license

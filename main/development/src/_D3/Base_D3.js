@@ -182,6 +182,7 @@ class Base_D3 {
   /**
    * plot - Instantiate the visualization based on the data provided
    * class = .pub means it's publish-able (file download)
+   * class = .resizable means it's updates on screen resize
    *
    * @param  {array} rawData an array of json objects with a common key
    */
@@ -194,7 +195,7 @@ class Base_D3 {
       .data(data)
       .enter()
       .append("rect")
-        .attr("class", "bar pub")
+        .attr("class", "bar pub resizable")
         .attr("height", 0)
         .attr("y", obj.height)
         .call(this.getAttr, this, ["x", "width", "fill"]);
@@ -202,13 +203,13 @@ class Base_D3 {
     // add the x Axis
     this.canvas
       .append("g")
-        .attr("class", "xAxis axis pub")
+        .attr("class", "xAxis axis pub resizable")
         .call(this.getXAxis, this);
 
     // add the y Axis
     this.canvas
       .append("g")
-        .attr("class", "yAxis axis pub")
+        .attr("class", "yAxis axis pub resizable")
         .call(this.getYAxis, this, data);
 
     this.makePubBtn();
