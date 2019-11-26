@@ -22,6 +22,7 @@ class Pub_D3 {
     var unit = 80;
     var imagePadding = 2
     var alpha = "0.7"
+    var btnCol = this.setAlpha(this.colourTop, alpha);
 
     this.canvas
       .append("g")
@@ -32,16 +33,16 @@ class Pub_D3 {
           .attr("width", unit)
           .attr("height", unit)
           .attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
-          .attr("fill", "rgba(20, 183, 239," + alpha + ")")
+          .attr("fill", btnCol)
           .style("cursor", "pointer")
           .on("mouseover", function() {
-            d3.select(this).attr("fill", "rgba(20, 183, 239,1)")
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 1))
           })
           .on("mouseout", function() {
-            d3.select(this).attr("fill", "rgba(20, 183, 239," + alpha + ")")
+            d3.select(this).attr("fill", btnCol)
           })
           .on("click", function() {
-            d3.select(this).attr("fill", "rgba(20, 183, 239,0)")
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 0))
             saveSvgAsPng(
               document.getElementById(obj.id),
               obj.id + ".png",
