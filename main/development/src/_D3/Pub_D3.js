@@ -20,8 +20,8 @@ class Pub_D3 {
   makePubBtn() {
     var obj = this;
     var unit = 80;
-    var imagePadding = 2
-    var alpha = "0.7"
+    var imagePadding = 2;
+    var alpha = "0.7";
     var btnCol = this.setAlpha(this.colourTop, alpha);
 
     this.canvas
@@ -48,7 +48,7 @@ class Pub_D3 {
               obj.id + ".png",
               {scale: 2, backgroundColor: "#FFFFFF"}
             );
-          })
+          });
 
   this.div
     .append("img")
