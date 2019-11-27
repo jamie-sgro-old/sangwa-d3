@@ -1,6 +1,6 @@
 cd %cd%
 cd ../main
-copy /B "development/\src/\_D3/\Base_D3.js"^
+copy /B "development/\src/\Base_D3.js"^
  + "development/\src/\_D3/\Motion_D3.js"^
  + "development/\src/\_D3/\Colour_D3.js"^
  + "development/\src/\_D3/\Pub_D3.js"^
@@ -12,6 +12,3 @@ copy /B "development/\src/\_D3/\Base_D3.js"^
  + "development/\src/\Bargraph/\Bargraph.js"^
  + "development/\src/\Bargraph/\Bargraph_Date.js" saD3.js
 pause
-
-
-

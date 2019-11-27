@@ -1,5 +1,5 @@
 define(function (require) {
-    require("./_D3/Base_D3.js");
+    require("./Base_D3.js");
     require("./_D3/Motion_D3.js");
     require("./_D3/Colour_D3.js");
     require("./_D3/Pub_D3.js");

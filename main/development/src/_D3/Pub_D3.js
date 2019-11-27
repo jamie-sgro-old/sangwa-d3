@@ -20,43 +20,44 @@ class Pub_D3 {
   makePubBtn() {
     var obj = this;
     var unit = 80;
-    var imagePadding = 2
-    var alpha = "0.7"
+    var imagePadding = 2;
+    var alpha = "0.7";
+    var btnCol = this.setAlpha(this.colourTop, alpha);
 
     this.canvas
       .append("g")
-        .attr("class", "menu")
+        .attr("class", "menu resizable")
         .append("rect")
           .attr("x", obj.width + obj.margin.right - (unit/2))
           .attr("y", 0 - obj.margin.top - (unit/2))
           .attr("width", unit)
           .attr("height", unit)
           .attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
-          .attr("fill", "rgba(20, 183, 239," + alpha + ")")
+          .attr("fill", btnCol)
           .style("cursor", "pointer")
           .on("mouseover", function() {
-            d3.select(this).attr("fill", "rgba(20, 183, 239,1)")
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 1))
           })
           .on("mouseout", function() {
-            d3.select(this).attr("fill", "rgba(20, 183, 239," + alpha + ")")
+            d3.select(this).attr("fill", btnCol)
           })
           .on("click", function() {
-            d3.select(this).attr("fill", "rgba(20, 183, 239,0)")
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 0))
             saveSvgAsPng(
               document.getElementById(obj.id),
               obj.id + ".png",
               {scale: 2, backgroundColor: "#FFFFFF"}
             );
-          })
+          });
 
   this.div
     .append("img")
-      .attr("class", "picture")
+      .attr("class", "picture resizable")
       .attr("src", function(d) {
         //this icon is licensed under the Creative Commons
         //Attribution 4.0 International license
         //find out more at https://fontawesome.com/license
-        return "../../../development/images/file-image-regular.svg";
+        return obj.basePath + "/images/file-image-regular.svg";
       })
       .on("error", function() {
         console.log("error in retrieving image")
