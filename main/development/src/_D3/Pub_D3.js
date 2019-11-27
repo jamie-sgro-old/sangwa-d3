@@ -57,7 +57,7 @@ class Pub_D3 {
         //this icon is licensed under the Creative Commons
         //Attribution 4.0 International license
         //find out more at https://fontawesome.com/license
-        return "../../../development/images/file-image-regular.svg";
+        return obj.basePath + "/images/file-image-regular.svg";
       })
       .on("error", function() {
         console.log("error in retrieving image")

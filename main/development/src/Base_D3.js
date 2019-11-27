@@ -91,13 +91,13 @@ class Base_D3 {
 
 
   /**
-   * getBasePath - return full file path string for a script in the html given
+   * getBasePath - return partial file path string for a script in the html given
    *  and array of potential files.
    *
    * @param  {array} targetFile array of potential file names that require a
    *  full path
-   * @return {string}            full path for the firth matching targetFile in
-   *  array. else returns error
+   * @return {string}            partial path for the first matching targetFile in
+   *  array. The string contains all but the file itself else returns error
    */
   getBasePath(targetFile) {
     if (!Array.isArray(targetFile)) {
@@ -112,7 +112,9 @@ class Base_D3 {
 
         for (var file in targetFile) {
           if (fileName === targetFile[file]) {
-            return scriptList[i].src;
+            var rtn = scriptList[i].src;
+            rtn = rtn.substr(0, scriptList[i].src.length - targetFile[file].length);
+            return rtn;
           };
         }
       };
