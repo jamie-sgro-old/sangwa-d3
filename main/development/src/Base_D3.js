@@ -31,7 +31,7 @@
 class Base_D3 {
   /** @constructor */
   constructor(id, width, height, margin, colour) {
-    this.basePath = this.getBasePath(["Base_D3.js", "saD3.js"]);
+    this.basePath = this.getBasePath(["Base_D3.js", "saD3.js", "saD3.min.js"]);
 
     this.id = id;
     this.margin = margin;
