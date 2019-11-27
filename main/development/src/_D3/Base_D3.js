@@ -31,6 +31,8 @@
 class Base_D3 {
   /** @constructor */
   constructor(id, width, height, margin, colour) {
+    this.basePath = this.getBasePath();
+
     this.id = id;
     this.margin = margin;
     this.width = width - this.margin.left - this.margin.right;
@@ -83,6 +85,24 @@ class Base_D3 {
     this.canvas = this.svg
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+  };
+
+
+
+  getBasePath() {
+    var scriptList = document.getElementsByTagName("script");
+    for (var i in scriptList) {
+      if (scriptList[i].src != undefined) {
+        var folderArr = scriptList[i]["src"].split("/");
+        var fileName = folderArr[folderArr.length - 1];
+
+        if (fileName === "Base_D3.js" || fileName === "saD3.js") {
+          console.log(scriptList[i].src);
+        };
+      };
+    };
+    return false;
+
   };
 
 
