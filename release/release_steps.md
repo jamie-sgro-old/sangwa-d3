@@ -8,9 +8,9 @@ In the context of creating a release branch from *develop* and merging onto *mas
 2. Update package.json version number
    1. Should match the number in release branch name
 3. Compile saD3.js (according to make file advised through main.js in main/dev/src)
-   1. Make sure *not* to include test.js from /src
+   1. Make sure *not* to include test.js and main.js from /src
    2. Make sure to include license in compiled file
-      1. merge.bat automates this process if you make sure every file matches those in main.js (minus test.js)
+      1. merge.bat automates this process if you make sure every file matches those in main.js (minus test.js and main.js)
 4. Minify saD3.js to update saD3.min.js
    1. Make sure to include license
 5. Update docs
