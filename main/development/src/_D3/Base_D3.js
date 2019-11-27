@@ -31,7 +31,7 @@
 class Base_D3 {
   /** @constructor */
   constructor(id, width, height, margin, colour) {
-    this.basePath = this.getBasePath();
+    this.basePath = this.getBasePath(["Base_D3.js", "saD3.js"]);
 
     this.id = id;
     this.margin = margin;
@@ -89,20 +89,31 @@ class Base_D3 {
 
 
 
-  getBasePath() {
+
+  /**
+   * getBasePath - return full file path string for a script in the html given
+   *  and array of potential files.
+   *
+   * @param  {array} targetFile array of potential file names that require a full path
+   * @return {string}            full path for the firth matching targetFile in
+   *  array. else returns error
+   */
+  getBasePath(targetFile) {
     var scriptList = document.getElementsByTagName("script");
     for (var i in scriptList) {
       if (scriptList[i].src != undefined) {
         var folderArr = scriptList[i]["src"].split("/");
         var fileName = folderArr[folderArr.length - 1];
 
-        if (fileName === "Base_D3.js" || fileName === "saD3.js") {
-          console.log(scriptList[i].src);
-        };
+        for (var file in targetFile) {
+          if (fileName === targetFile[file]) {
+            return scriptList[i].src;
+          };
+        }
       };
     };
+    throw("Could not find targetFile in getBasePath()");
     return false;
-
   };
 
 
