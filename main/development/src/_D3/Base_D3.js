@@ -94,11 +94,16 @@ class Base_D3 {
    * getBasePath - return full file path string for a script in the html given
    *  and array of potential files.
    *
-   * @param  {array} targetFile array of potential file names that require a full path
+   * @param  {array} targetFile array of potential file names that require a
+   *  full path
    * @return {string}            full path for the firth matching targetFile in
    *  array. else returns error
    */
   getBasePath(targetFile) {
+    if (!Array.isArray(targetFile)) {
+      throw("Error in getBasePath(): param 'targetFile' needs to be an array");
+    };
+
     var scriptList = document.getElementsByTagName("script");
     for (var i in scriptList) {
       if (scriptList[i].src != undefined) {
@@ -112,7 +117,7 @@ class Base_D3 {
         }
       };
     };
-    throw("Could not find targetFile in getBasePath()");
+    throw("Error in getBasePath(): could not find targetFile in getBasePath()");
     return false;
   };
 
