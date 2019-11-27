@@ -31,6 +31,8 @@
 class Base_D3 {
   /** @constructor */
   constructor(id, width, height, margin, colour) {
+    this.basePath = this.getBasePath(["Base_D3.js", "saD3.js"]);
+
     this.id = id;
     this.margin = margin;
     this.width = width - this.margin.left - this.margin.right;
@@ -50,6 +52,7 @@ class Base_D3 {
     this.getColour = this.colour_D3.getColour;
     this._getAttr_fill = this.colour_D3._getAttr_fill;
     this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
+    this.setAlpha = this.colour_D3.setAlpha;
 
     //add pub module
     this.pub_D3 = new Pub_D3;
@@ -70,7 +73,10 @@ class Base_D3 {
         .attr("height", obj.height + obj.margin.top + obj.margin.bottom);
     };
 
-    this.svg = d3.select("body")
+    this.div = d3.select("body")
+      .append("div")
+
+    this.svg = this.div
       .append("svg")
         .attr("id", id)
         .attr("class", "graph svg")
@@ -79,6 +85,42 @@ class Base_D3 {
     this.canvas = this.svg
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+  };
+
+
+
+
+  /**
+   * getBasePath - return partial file path string for a script in the html given
+   *  and array of potential files.
+   *
+   * @param  {array} targetFile array of potential file names that require a
+   *  full path
+   * @return {string}            partial path for the first matching targetFile in
+   *  array. The string contains all but the file itself else returns error
+   */
+  getBasePath(targetFile) {
+    if (!Array.isArray(targetFile)) {
+      throw("Error in getBasePath(): param 'targetFile' needs to be an array");
+    };
+
+    var scriptList = document.getElementsByTagName("script");
+    for (var i in scriptList) {
+      if (scriptList[i].src != undefined) {
+        var folderArr = scriptList[i]["src"].split("/");
+        var fileName = folderArr[folderArr.length - 1];
+
+        for (var file in targetFile) {
+          if (fileName === targetFile[file]) {
+            var rtn = scriptList[i].src;
+            rtn = rtn.substr(0, rtn.length - targetFile[file].length);
+            return rtn;
+          };
+        }
+      };
+    };
+    throw("Error in getBasePath(): could not find targetFile in getBasePath()");
+    return false;
   };
 
 
@@ -177,6 +219,8 @@ class Base_D3 {
 
   /**
    * plot - Instantiate the visualization based on the data provided
+   * class = .pub means it's publish-able (file download)
+   * class = .resizable means it's updates on screen resize
    *
    * @param  {array} rawData an array of json objects with a common key
    */
@@ -189,7 +233,7 @@ class Base_D3 {
       .data(data)
       .enter()
       .append("rect")
-        .attr("class", "bar")
+        .attr("class", "bar pub resizable")
         .attr("height", 0)
         .attr("y", obj.height)
         .call(this.getAttr, this, ["x", "width", "fill"]);
@@ -197,13 +241,13 @@ class Base_D3 {
     // add the x Axis
     this.canvas
       .append("g")
-        .attr("class", "x axis")
+        .attr("class", "xAxis axis pub resizable")
         .call(this.getXAxis, this);
 
     // add the y Axis
     this.canvas
       .append("g")
-        .attr("class", "y axis")
+        .attr("class", "yAxis axis pub resizable")
         .call(this.getYAxis, this, data);
 
     this.makePubBtn();
@@ -347,6 +391,27 @@ class Colour_D3 {
       return setAlpha(rtn, 0);
     });
   };
+
+
+
+  /**
+   * setAlpha - input a d3-compatible rgb() or rgba() string, outputs same
+   * colour with a new opacity level
+   *
+   * @param  {string} c rgb or rgba string
+   *  i.e. "rgb(20, 183, 239)" or "rgba(20, 183, 239, 0.5)". for rgba strings
+   *  the alpha-level will be overwritten
+   * @param  {int} v value of opactiy/alpha to be returned
+   *  i.e. 0.2
+   * @return {string} rgba string with the new alpha level
+   *  i.e. "rgba(20, 183, 239, 0.2)"
+   */
+  setAlpha(c, v) {
+    var c = d3.rgb(c);
+    c.opacity = v;
+
+    return c;
+  }
 }; // End Class
 /**
  * Base class of all d3 publication related functions
@@ -363,38 +428,77 @@ class Pub_D3 {
    * makePubBtn - Create an interactable button in the svg of the graph (canvas)
    * that downloads a .png file to the local machine of the id element of the svg
    *
+   * class = menu means it's part of a user interface
+   *
    * @return {type}  returns nothing
    */
   makePubBtn() {
     var obj = this;
-    var unit = 50;
-    var alpha = "0.2"
+    var unit = 80;
+    var imagePadding = 2;
+    var alpha = "0.7";
+    var btnCol = this.setAlpha(this.colourTop, alpha);
 
     this.canvas
       .append("g")
-        .attr("class", "pub")
+        .attr("class", "menu resizable")
         .append("rect")
-        .attr("x", obj.width - unit)
-        .attr("y", 0)
-        .attr("width", unit)
-        .attr("height", unit)
-        .attr("fill", "rgba(0,0,0," + alpha + ")")
-        .style("cursor", "pointer")
-        .on("mouseover", function() {
-          d3.select(this).attr("fill", "rgba(0,0,0,1)")
-        })
-        .on("mouseout", function() {
-          d3.select(this).attr("fill", "rgba(0,0,0," + alpha + ")")
-        })
-        .on("click", function() {
-          d3.select(this).attr("fill", "rgba(0,0,0,0)")
+          .attr("x", obj.width + obj.margin.right - (unit/2))
+          .attr("y", 0 - obj.margin.top - (unit/2))
+          .attr("width", unit)
+          .attr("height", unit)
+          .attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
+          .attr("fill", btnCol)
+          .style("cursor", "pointer")
+          .on("mouseover", function() {
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 1))
+          })
+          .on("mouseout", function() {
+            d3.select(this).attr("fill", btnCol)
+          })
+          .on("click", function() {
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 0))
+            saveSvgAsPng(
+              document.getElementById(obj.id),
+              obj.id + ".png",
+              {scale: 2, backgroundColor: "#FFFFFF"}
+            );
+          });
 
-          saveSvgAsPng(
-            document.getElementById(obj.id),
-            obj.id + ".png",
-            {scale: 2, backgroundColor: "#FFFFFF"}
-          );
-        })
+  this.div
+    .append("img")
+      .attr("class", "picture resizable")
+      .attr("src", function(d) {
+        //this icon is licensed under the Creative Commons
+        //Attribution 4.0 International license
+        //find out more at https://fontawesome.com/license
+        return obj.basePath + "/images/file-image-regular.svg";
+      })
+      .on("error", function() {
+        console.log("error in retrieving image")
+      })
+      .style("width",  unit/4 + "px")
+      .style("position", "absolute")
+      .style("left", function() {
+        var rtn = document
+          .getElementById(obj.id)
+            .getBoundingClientRect().right;
+
+        rtn -= unit/4;
+        rtn -= imagePadding;
+
+        return rtn.toString() + "px";
+      })
+      .style("top", function() {
+        var rtn = document
+          .getElementById(obj.id)
+          .getBoundingClientRect().top;
+
+        rtn += imagePadding;
+
+        return rtn.toString() + "px";
+      })
+      .style("pointer-events", "none");
   };
 };
 /**
