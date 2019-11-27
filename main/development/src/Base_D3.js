@@ -113,7 +113,7 @@ class Base_D3 {
         for (var file in targetFile) {
           if (fileName === targetFile[file]) {
             var rtn = scriptList[i].src;
-            rtn = rtn.substr(0, scriptList[i].src.length - targetFile[file].length);
+            rtn = rtn.substr(0, rtn.length - targetFile[file].length);
             return rtn;
           };
         }
