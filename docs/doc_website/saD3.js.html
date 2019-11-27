@@ -29,7 +29,7 @@
             <pre class="prettyprint source linenums"><code>/**
  *  @fileOverview saD3 is a javascript library extending the d3
  * functionality of common graphs matching the conventions perscribed
- * by Sangwa Solutions
+ * by the author
  *
  *  @author       Jamie Sgro
  *
@@ -58,7 +58,10 @@
 
 class Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour) {
+  constructor(id, width, height, margin, colour) {
+    this.basePath = this.getBasePath(["Base_D3.js", "saD3.js"]);
+
+    this.id = id;
     this.margin = margin;
     this.width = width - this.margin.left - this.margin.right;
     this.height = height - this.margin.top - this.margin.bottom;
@@ -72,12 +75,16 @@ class Base_D3 {
     this.widthScale = function() {};
     this.heightScale = function() {};
 
+    //add colour module
     this.colour_D3 = new Colour_D3;
-
     this.getColour = this.colour_D3.getColour;
     this._getAttr_fill = this.colour_D3._getAttr_fill;
     this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
+    this.setAlpha = this.colour_D3.setAlpha;
 
+    //add pub module
+    this.pub_D3 = new Pub_D3;
+    this.makePubBtn = this.pub_D3.makePubBtn
     /**
     * Formats the size of the element based on parameters set in construction
     *
@@ -94,14 +101,54 @@ class Base_D3 {
         .attr("height", obj.height + obj.margin.top + obj.margin.bottom);
     };
 
-    this.svg = d3.select("body")
+    this.div = d3.select("body")
+      .append("div")
+
+    this.svg = this.div
       .append("svg")
+        .attr("id", id)
         .attr("class", "graph svg")
         .call(this.getSvgSize, this);
 
     this.canvas = this.svg
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+  };
+
+
+
+
+  /**
+   * getBasePath - return partial file path string for a script in the html given
+   *  and array of potential files.
+   *
+   * @param  {array} targetFile array of potential file names that require a
+   *  full path
+   * @return {string}            partial path for the first matching targetFile in
+   *  array. The string contains all but the file itself else returns error
+   */
+  getBasePath(targetFile) {
+    if (!Array.isArray(targetFile)) {
+      throw("Error in getBasePath(): param 'targetFile' needs to be an array");
+    };
+
+    var scriptList = document.getElementsByTagName("script");
+    for (var i in scriptList) {
+      if (scriptList[i].src != undefined) {
+        var folderArr = scriptList[i]["src"].split("/");
+        var fileName = folderArr[folderArr.length - 1];
+
+        for (var file in targetFile) {
+          if (fileName === targetFile[file]) {
+            var rtn = scriptList[i].src;
+            rtn = rtn.substr(0, rtn.length - targetFile[file].length);
+            return rtn;
+          };
+        }
+      };
+    };
+    throw("Error in getBasePath(): could not find targetFile in getBasePath()");
+    return false;
   };
 
 
@@ -200,6 +247,8 @@ class Base_D3 {
 
   /**
    * plot - Instantiate the visualization based on the data provided
+   * class = .pub means it's publish-able (file download)
+   * class = .resizable means it's updates on screen resize
    *
    * @param  {array} rawData an array of json objects with a common key
    */
@@ -212,7 +261,7 @@ class Base_D3 {
       .data(data)
       .enter()
       .append("rect")
-        .attr("class", "bar")
+        .attr("class", "bar pub resizable")
         .attr("height", 0)
         .attr("y", obj.height)
         .call(this.getAttr, this, ["x", "width", "fill"]);
@@ -220,14 +269,16 @@ class Base_D3 {
     // add the x Axis
     this.canvas
       .append("g")
-        .attr("class", "x axis")
+        .attr("class", "xAxis axis pub resizable")
         .call(this.getXAxis, this);
 
     // add the y Axis
     this.canvas
       .append("g")
-        .attr("class", "y axis")
+        .attr("class", "yAxis axis pub resizable")
         .call(this.getYAxis, this, data);
+
+    this.makePubBtn();
 
     this.postPlot(data);
   };
@@ -292,6 +343,37 @@ class Motion_D3 {
         };
       });
   };
+
+
+
+  /**
+   * resetTween - same as attrTween, only it conducts two tweens synchronously,
+   * one after the other.
+   *
+   * The duration for the second tween is set to be 3 times longer than the first
+   * usefull for dynamic highlighting and so on.
+   */
+  resetTween(path, duration, attr, endRes, peakRes) {
+    var dummy = {};
+
+    d3.select(dummy)
+      .transition()
+      .duration(duration)
+      .tween(attr, function() {
+        var lerp = d3.interpolate(path.attr(attr), peakRes);
+        return function(t) {
+          path.attr(attr, lerp(t));
+        };
+      })
+      .transition()
+      .duration(duration*3)
+      .tween(attr, function() {
+        var lerp = d3.interpolate(peakRes, endRes);
+        return function(t) {
+          path.attr(attr, lerp(t));
+        };
+      })
+  }
 }; // End Class
 /**
  * Base class of all d3 motion related functions
@@ -337,7 +419,116 @@ class Colour_D3 {
       return setAlpha(rtn, 0);
     });
   };
+
+
+
+  /**
+   * setAlpha - input a d3-compatible rgb() or rgba() string, outputs same
+   * colour with a new opacity level
+   *
+   * @param  {string} c rgb or rgba string
+   *  i.e. "rgb(20, 183, 239)" or "rgba(20, 183, 239, 0.5)". for rgba strings
+   *  the alpha-level will be overwritten
+   * @param  {int} v value of opactiy/alpha to be returned
+   *  i.e. 0.2
+   * @return {string} rgba string with the new alpha level
+   *  i.e. "rgba(20, 183, 239, 0.2)"
+   */
+  setAlpha(c, v) {
+    var c = d3.rgb(c);
+    c.opacity = v;
+
+    return c;
+  }
 }; // End Class
+/**
+ * Base class of all d3 publication related functions
+ */
+
+class Pub_D3 {
+  /** @constructor */
+  constructor() {
+
+  };
+
+
+  /**
+   * makePubBtn - Create an interactable button in the svg of the graph (canvas)
+   * that downloads a .png file to the local machine of the id element of the svg
+   *
+   * class = menu means it's part of a user interface
+   *
+   * @return {type}  returns nothing
+   */
+  makePubBtn() {
+    var obj = this;
+    var unit = 80;
+    var imagePadding = 2;
+    var alpha = "0.7";
+    var btnCol = this.setAlpha(this.colourTop, alpha);
+
+    this.canvas
+      .append("g")
+        .attr("class", "menu resizable")
+        .append("rect")
+          .attr("x", obj.width + obj.margin.right - (unit/2))
+          .attr("y", 0 - obj.margin.top - (unit/2))
+          .attr("width", unit)
+          .attr("height", unit)
+          .attr("transform", "rotate(45, " + (obj.width + obj.margin.right) + ", " + (0 - obj.margin.top) + ")")
+          .attr("fill", btnCol)
+          .style("cursor", "pointer")
+          .on("mouseover", function() {
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 1))
+          })
+          .on("mouseout", function() {
+            d3.select(this).attr("fill", btnCol)
+          })
+          .on("click", function() {
+            d3.select(this).attr("fill", obj.setAlpha(btnCol, 0))
+            saveSvgAsPng(
+              document.getElementById(obj.id),
+              obj.id + ".png",
+              {scale: 2, backgroundColor: "#FFFFFF"}
+            );
+          });
+
+  this.div
+    .append("img")
+      .attr("class", "picture resizable")
+      .attr("src", function(d) {
+        //this icon is licensed under the Creative Commons
+        //Attribution 4.0 International license
+        //find out more at https://fontawesome.com/license
+        return obj.basePath + "/images/file-image-regular.svg";
+      })
+      .on("error", function() {
+        console.log("error in retrieving image")
+      })
+      .style("width",  unit/4 + "px")
+      .style("position", "absolute")
+      .style("left", function() {
+        var rtn = document
+          .getElementById(obj.id)
+            .getBoundingClientRect().right;
+
+        rtn -= unit/4;
+        rtn -= imagePadding;
+
+        return rtn.toString() + "px";
+      })
+      .style("top", function() {
+        var rtn = document
+          .getElementById(obj.id)
+          .getBoundingClientRect().top;
+
+        rtn += imagePadding;
+
+        return rtn.toString() + "px";
+      })
+      .style("pointer-events", "none");
+  };
+};
 /**
  * Extention of Data_D3 for data that is of type: Int
  * @class
@@ -474,8 +665,8 @@ class _Date {
  */
 class Histogram extends Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum, yLabel = "value") {
-    super(width, height, margin, colour);
+  constructor(id, width, height, margin, colour, binNum, yLabel = "value") {
+    super(id, width, height, margin, colour);
 
     this.binNum = binNum;
     this.yLabel = yLabel;
@@ -577,8 +768,8 @@ class Histogram extends Base_D3 {
  */
 class Histogram_Int extends Histogram {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum, yLabel) {
-    super(width, height, margin, colour, binNum, yLabel);
+  constructor(id, width, height, margin, colour, binNum, yLabel) {
+    super(id, width, height, margin, colour, binNum, yLabel);
 
     this._int = new _Int;
 
@@ -595,8 +786,8 @@ class Histogram_Int extends Histogram {
  */
 class Histogram_Date extends Histogram {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum, yLabel) {
-    super(width, height, margin, colour, binNum, yLabel);
+  constructor(id, width, height, margin, colour, binNum, yLabel) {
+    super(id, width, height, margin, colour, binNum, yLabel);
 
     this._date = new _Date;
 
@@ -609,8 +800,8 @@ class Histogram_Date extends Histogram {
  */
 class Bargraph extends Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour, yLabel = "value", xLabel = "start_date") {
-    super(width, height, margin, colour);
+  constructor(id, width, height, margin, colour, yLabel = "value", xLabel = "start_date") {
+    super(id, width, height, margin, colour);
 
     this.xLabel = xLabel;
     this.yLabel = yLabel;
@@ -700,8 +891,8 @@ class Bargraph extends Base_D3 {
  */
 class Bargraph_Date extends Bargraph {
   /** @constructor */
-  constructor(width, height, margin, colour, yLabel, xLabel) {
-    super(width, height, margin, colour, yLabel, xLabel);
+  constructor(id, width, height, margin, colour, yLabel, xLabel) {
+    super(id, width, height, margin, colour, yLabel, xLabel);
 
     this._date = new _Date;
 
@@ -719,13 +910,13 @@ class Bargraph_Date extends Bargraph {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_Date.html">_Date</a></li><li><a href="-_Int.html">_Int</a></li><li><a href="Bargraph.html">Bargraph</a></li><li><a href="Bargraph_Date.html">Bargraph_Date</a></li><li><a href="Base_D3.html">Base_D3</a></li><li><a href="Colour_D3.html">Colour_D3</a></li><li><a href="Histogram.html">Histogram</a></li><li><a href="Histogram_Date.html">Histogram_Date</a></li><li><a href="Histogram_Int.html">Histogram_Int</a></li><li><a href="Motion_D3.html">Motion_D3</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_Date.html">_Date</a></li><li><a href="-_Int.html">_Int</a></li><li><a href="Bargraph.html">Bargraph</a></li><li><a href="Bargraph_Date.html">Bargraph_Date</a></li><li><a href="Base_D3.html">Base_D3</a></li><li><a href="Colour_D3.html">Colour_D3</a></li><li><a href="Histogram.html">Histogram</a></li><li><a href="Histogram_Date.html">Histogram_Date</a></li><li><a href="Histogram_Int.html">Histogram_Int</a></li><li><a href="Motion_D3.html">Motion_D3</a></li><li><a href="Pub_D3.html">Pub_D3</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 19 2019 15:46:44 GMT+0100 (W. Europe Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Nov 27 2019 11:00:53 GMT+0100 (W. Europe Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

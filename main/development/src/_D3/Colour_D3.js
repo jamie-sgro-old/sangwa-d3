@@ -42,4 +42,25 @@ class Colour_D3 {
       return setAlpha(rtn, 0);
     });
   };
+
+
+
+  /**
+   * setAlpha - input a d3-compatible rgb() or rgba() string, outputs same
+   * colour with a new opacity level
+   *
+   * @param  {string} c rgb or rgba string
+   *  i.e. "rgb(20, 183, 239)" or "rgba(20, 183, 239, 0.5)". for rgba strings
+   *  the alpha-level will be overwritten
+   * @param  {int} v value of opactiy/alpha to be returned
+   *  i.e. 0.2
+   * @return {string} rgba string with the new alpha level
+   *  i.e. "rgba(20, 183, 239, 0.2)"
+   */
+  setAlpha(c, v) {
+    var c = d3.rgb(c);
+    c.opacity = v;
+
+    return c;
+  }
 }; // End Class

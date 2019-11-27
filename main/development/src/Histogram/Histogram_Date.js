@@ -7,8 +7,8 @@
  */
 class Histogram_Date extends Histogram {
   /** @constructor */
-  constructor(width, height, margin, colour, binNum, yLabel) {
-    super(width, height, margin, colour, binNum, yLabel);
+  constructor(id, width, height, margin, colour, binNum, yLabel) {
+    super(id, width, height, margin, colour, binNum, yLabel);
 
     this._date = new _Date;
 

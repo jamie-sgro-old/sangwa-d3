@@ -1,7 +1,7 @@
 /**
  *  @fileOverview saD3 is a javascript library extending the d3
  * functionality of common graphs matching the conventions perscribed
- * by Sangwa Solutions
+ * by the author
  *
  *  @author       Jamie Sgro
  *
@@ -30,7 +30,10 @@
 
 class Base_D3 {
   /** @constructor */
-  constructor(width, height, margin, colour) {
+  constructor(id, width, height, margin, colour) {
+    this.basePath = this.getBasePath(["Base_D3.js", "saD3.js", "saD3.min.js"]);
+
+    this.id = id;
     this.margin = margin;
     this.width = width - this.margin.left - this.margin.right;
     this.height = height - this.margin.top - this.margin.bottom;
@@ -44,12 +47,16 @@ class Base_D3 {
     this.widthScale = function() {};
     this.heightScale = function() {};
 
+    //add colour module
     this.colour_D3 = new Colour_D3;
-
     this.getColour = this.colour_D3.getColour;
     this._getAttr_fill = this.colour_D3._getAttr_fill;
     this._getAttr_fillTransparent = this.colour_D3._getAttr_fillTransparent;
+    this.setAlpha = this.colour_D3.setAlpha;
 
+    //add pub module
+    this.pub_D3 = new Pub_D3;
+    this.makePubBtn = this.pub_D3.makePubBtn
     /**
     * Formats the size of the element based on parameters set in construction
     *
@@ -66,14 +73,54 @@ class Base_D3 {
         .attr("height", obj.height + obj.margin.top + obj.margin.bottom);
     };
 
-    this.svg = d3.select("body")
+    this.div = d3.select("body")
+      .append("div")
+
+    this.svg = this.div
       .append("svg")
+        .attr("id", id)
         .attr("class", "graph svg")
         .call(this.getSvgSize, this);
 
     this.canvas = this.svg
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+  };
+
+
+
+
+  /**
+   * getBasePath - return partial file path string for a script in the html given
+   *  and array of potential files.
+   *
+   * @param  {array} targetFile array of potential file names that require a
+   *  full path
+   * @return {string}            partial path for the first matching targetFile in
+   *  array. The string contains all but the file itself else returns error
+   */
+  getBasePath(targetFile) {
+    if (!Array.isArray(targetFile)) {
+      throw("Error in getBasePath(): param 'targetFile' needs to be an array");
+    };
+
+    var scriptList = document.getElementsByTagName("script");
+    for (var i in scriptList) {
+      if (scriptList[i].src != undefined) {
+        var folderArr = scriptList[i]["src"].split("/");
+        var fileName = folderArr[folderArr.length - 1];
+
+        for (var file in targetFile) {
+          if (fileName === targetFile[file]) {
+            var rtn = scriptList[i].src;
+            rtn = rtn.substr(0, rtn.length - targetFile[file].length);
+            return rtn;
+          };
+        }
+      };
+    };
+    throw("Error in getBasePath(): could not find targetFile in getBasePath()");
+    return false;
   };
 
 
@@ -172,6 +219,8 @@ class Base_D3 {
 
   /**
    * plot - Instantiate the visualization based on the data provided
+   * class = .pub means it's publish-able (file download)
+   * class = .resizable means it's updates on screen resize
    *
    * @param  {array} rawData an array of json objects with a common key
    */
@@ -184,7 +233,7 @@ class Base_D3 {
       .data(data)
       .enter()
       .append("rect")
-        .attr("class", "bar")
+        .attr("class", "bar pub resizable")
         .attr("height", 0)
         .attr("y", obj.height)
         .call(this.getAttr, this, ["x", "width", "fill"]);
@@ -192,14 +241,16 @@ class Base_D3 {
     // add the x Axis
     this.canvas
       .append("g")
-        .attr("class", "x axis")
+        .attr("class", "xAxis axis pub resizable")
         .call(this.getXAxis, this);
 
     // add the y Axis
     this.canvas
       .append("g")
-        .attr("class", "y axis")
+        .attr("class", "yAxis axis pub resizable")
         .call(this.getYAxis, this, data);
+
+    this.makePubBtn();
 
     this.postPlot(data);
   };

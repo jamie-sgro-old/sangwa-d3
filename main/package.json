@@ -1,6 +1,6 @@
 {
   "name": "saD3",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "D3 visualization library",
   "main": "saD3.min.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "d3": "^5.12.0",
     "jsdoc": "^3.6.3",
     "node": "^12.13.0",
-    "require": "^2.4.20"
+    "require": "^2.4.20",
+    "save-svg-as-png": "^1.4.14"
   }
 }

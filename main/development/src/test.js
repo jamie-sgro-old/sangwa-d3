@@ -1,11 +1,13 @@
 var running = "hist";
 
+COLOUR_TOP = "rgb(20, 183, 239)"
+
 if (running == "bar") {
   b = new Bargraph_Date(
     800,
     250,
     {top: 30, right: 30, bottom: 30, left: 30},
-    {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+    {top: COLOUR_TOP, bottom: "rgb(255, 255, 255)"},
     yLabel = "value",
     xLabel = "start_date",
   );
@@ -26,10 +28,11 @@ if (running == "bar") {
   b.plot(dataDate);
 } else if (running == "hist") {
   h = new Histogram_Int(
+    "histogramInt.svg",
     800,
     250,
-    {top: 10, right: 80, bottom: 30, left: 30},
-    {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+    {top: 30, right: 30, bottom: 30, left: 30},
+    {top: COLOUR_TOP, bottom: "rgb(255, 255, 255)"},
     binNum = 10,
     yLabel = "value",
   );
@@ -50,10 +53,11 @@ if (running == "bar") {
 
 
   h = new Histogram_Date(
+    "histogramDate.svg",
     800,
     250,
-    {top: 10, right: 30, bottom: 30, left: 30},
-    {top: "rgb(237, 85, 101)", bottom: "rgb(255, 255, 255)"},
+    {top: 30, right: 30, bottom: 30, left: 30},
+    {top: COLOUR_TOP, bottom: "rgb(255, 255, 255)"},
     binNum = 10,
     yLabel = "value",
   );
